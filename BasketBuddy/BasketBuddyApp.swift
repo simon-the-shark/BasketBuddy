@@ -13,8 +13,9 @@ struct BasketBuddyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ShoppingListsListView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainView()
+                .environmentObject(AuthService())
+//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }
