@@ -13,7 +13,7 @@ struct BasketBuddyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ShoppingListsListView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
