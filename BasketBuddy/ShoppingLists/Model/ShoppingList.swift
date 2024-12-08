@@ -7,6 +7,13 @@
 
 import Foundation
 
+struct ShoppingListTemplate: Codable {
+    var name: String
+    var color: String
+    var emoji: String
+    var isActive: Bool
+}
+
 struct ShoppingList: Codable, Identifiable {
     struct Item: Codable, Identifiable {
         struct Product: Codable, Identifiable {

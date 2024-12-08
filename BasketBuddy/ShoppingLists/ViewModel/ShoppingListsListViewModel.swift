@@ -39,11 +39,31 @@ extension ShoppingListsListView {
         func cancelDialog() {
             isPresented = false
             listUnderEditing = nil
+            dialogInputText = ""
         }
 
-        func saveDialog() {
+        func saveDialog(with: AuthService) {
             isPresented = false
+            if isDialogInEditingMode {
+                var item = listUnderEditing!
+                item.name = dialogInputText
+                Task {
+                    let success = await ShoppingListsRepository.shared.editList(with: with, item: item)
+                    if success {
+                        fetchShoppingLists(with: with)
+                    }
+                }
+            } else {
+                let item = ShoppingListTemplate(name: dialogInputText, color: "default", emoji: "s", isActive: true)
+                Task {
+                    let success = await ShoppingListsRepository.shared.addList(with: with, item: item)
+                    if success {
+                        fetchShoppingLists(with: with)
+                    }
+                }
+            }
             listUnderEditing = nil
+            dialogInputText = ""
         }
 
         func showAddListDialog() {

@@ -40,12 +40,18 @@ struct ShoppingListsListView: View {
 
                     Button("Anuluj", role: .cancel, action: viewModel.cancelDialog)
 
-                    Button(viewModel.isDialogInEditingMode ? "Zapisz" : "Dodaj", action: viewModel.saveDialog)
+                    Button(viewModel.isDialogInEditingMode ? "Zapisz" : "Dodaj") {
+                        viewModel.saveDialog(with: authService)
+                    }
 
                 } message: {
                     Text(viewModel.isDialogInEditingMode ? "Edytujesz listę \(viewModel.listUnderEditing!.name)" : "Wpisz nazwę nowej listy")
                 }
-            }.onAppear {
+            } action: {
+                viewModel.showAddListDialog()
+            }
+
+            .onAppear {
                 viewModel.fetchShoppingLists(with: authService)
             }
         }

@@ -2,9 +2,11 @@ import SwiftUI
 
 struct LogoAppBar<Content: View>: View {
     var content: Content
+    var action: () -> Void
 
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(@ViewBuilder content: @escaping () -> Content, action: @escaping () -> Void) {
         self.content = content()
+        self.action = action
 
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
@@ -30,14 +32,12 @@ struct LogoAppBar<Content: View>: View {
                         .ignoresSafeArea()
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: addItem) {
+                    Button(action: action) {
                         Label("Dodaj listę", systemImage: "plus.app")
                     }.controlSize(.extraLarge).padding(.top, 20)
                 }
             }.padding(.top, 20)
     }
-
-    private func addItem() {}
 }
 
 #Preview {
