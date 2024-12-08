@@ -5,7 +5,6 @@
 //  Created by Szymon Kowaliński on 08/12/2024.
 //
 
-
 import Foundation
 import SwiftUI
 
@@ -23,13 +22,13 @@ struct AuthView: View {
             SecureField("Password", text: $viewModel.password)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
-            
+
             if !viewModel.isLoggingIn {
                 SecureField("Password Repeat", text: $viewModel.passwordRepeat)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
             }
-            
+
             Button(action: {
                 Task {
                     await viewModel.login(with: authService)
@@ -55,15 +54,14 @@ struct AuthView: View {
                     .cornerRadius(8)
             }
             .padding()
-            
+
             Button(action: {
                 viewModel.toggleIsLogginIn()
             }) {
                 Text(viewModel.isLoggingIn ?
-                     "Masz już konto? Zarejestruj się" : "Nie masz konta? Zaloguj się")
+                    "Masz już konto? Zarejestruj się" : "Nie masz konta? Zaloguj się")
                     .padding()
             }
-
 
             if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)

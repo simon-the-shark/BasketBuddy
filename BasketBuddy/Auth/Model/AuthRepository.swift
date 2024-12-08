@@ -16,7 +16,7 @@ class AuthRepository {
     static let shared: AuthRepository = .init()
 
     func getAuthState() throws -> AuthState {
-         let (token, userId) = try localRepository.getTokenAndUser()
+        let (token, userId) = try localRepository.getTokenAndUser()
         guard let token = token else {
             return AuthState(data: nil)
         }

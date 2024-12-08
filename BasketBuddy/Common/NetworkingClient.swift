@@ -33,7 +33,6 @@ class NetworkingClient {
         if let headers = headers {
             for (key, value) in headers {
                 request.setValue(value, forHTTPHeaderField: key)
-               
             }
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -41,9 +40,9 @@ class NetworkingClient {
         if let body = body {
             request.httpBody = body
         }
-                
+
         let (data, response) = try await URLSession.shared.data(for: request)
-        
+
         if let httpResponse = response as? HTTPURLResponse {
             print("HTTP Status Code: \(httpResponse.statusCode)")
         }

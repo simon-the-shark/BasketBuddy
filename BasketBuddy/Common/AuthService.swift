@@ -11,23 +11,22 @@ class AuthService: ObservableObject {
 
     private let authRepository = AuthRepository.shared
 
-    init () {
+    init() {
         do {
             authState = try authRepository.getAuthState()
         } catch {
             authState = .init(data: nil)
         }
     }
-    
+
     func login(email: String, password: String) async throws {
         let authState = try await authRepository.login(email: email, password: password)
         DispatchQueue.main.async {
             self.authState = authState
         }
-    
     }
 
-    func signup(email: String, password: String)   async throws {
+    func signup(email: String, password: String) async throws {
         let authState = try await authRepository.signup(email: email, password: password)
         DispatchQueue.main.async {
             self.authState = authState

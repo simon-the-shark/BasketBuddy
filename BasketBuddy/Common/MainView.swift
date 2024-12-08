@@ -10,16 +10,15 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject private var authService: AuthService
-    
-    var body: some View {
-         if authService.authState.isAuthenticated {
-                ShoppingListsListView()
-            } else {
-                AuthView()
-            }
-        }
-}
 
+    var body: some View {
+        if authService.authState.isAuthenticated {
+            ShoppingListsListView()
+        } else {
+            AuthView()
+        }
+    }
+}
 
 #Preview {
     MainView().environmentObject(AuthService())

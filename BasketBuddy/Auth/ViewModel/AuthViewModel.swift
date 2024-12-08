@@ -11,13 +11,12 @@ import SwiftUI
 extension AuthView {
     class ViewModel: ObservableObject {
         @Published var errorMessage: String?
-        
+
         @Published var email = ""
         @Published var password = ""
         @Published var passwordRepeat = ""
         @Published var isLoggingIn = true
 
-        
         func login(with: AuthService) async {
             do {
                 try await with.login(email: email, password: password)
@@ -37,9 +36,9 @@ extension AuthView {
                 }
             }
         }
-        
+
         func toggleIsLogginIn() {
-            self.isLoggingIn = !isLoggingIn
+            isLoggingIn = !isLoggingIn
         }
     }
 }

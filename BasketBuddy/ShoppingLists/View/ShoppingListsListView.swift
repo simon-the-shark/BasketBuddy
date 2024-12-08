@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShoppingListsListView: View {
     @StateObject var viewModel: ViewModel = .init()
+    @EnvironmentObject private var authService: AuthService
 
     var body: some View {
         NavigationView {
@@ -58,11 +59,13 @@ struct ShoppingListsListView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .background(Color("GrayBackground"))
+            }.onAppear {
+                viewModel.fetchShoppingLists(with: authService)
             }
         }
     }
 }
 
 #Preview {
-    ShoppingListsListView()
+    ShoppingListsListView().environmentObject(AuthService())
 }

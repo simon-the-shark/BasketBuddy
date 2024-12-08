@@ -27,4 +27,8 @@ struct AuthState: Codable {
     var isAuthenticated: Bool {
         return data != nil
     }
+
+    var tokenRequired: String {
+        return data!.token
+    }
 }
