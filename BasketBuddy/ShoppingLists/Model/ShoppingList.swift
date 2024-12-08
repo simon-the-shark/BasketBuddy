@@ -14,16 +14,19 @@ struct ShoppingList: Codable, Identifiable {
                 let id: Int
                 let name: String
             }
+
             let id: Int
             let category: Category
             let name: String
         }
+
         let id: Int
         let product: Product
         let quantity: Int
         let unit: String
         let isBought: Bool
     }
+
     let id: Int
     let items: [Item]
     var name: String
@@ -59,7 +62,7 @@ extension ShoppingList {
                     quantity: 10,
                     unit: "pcs",
                     isBought: true
-                )
+                ),
             ],
             name: "Weekly Groceries",
             color: "Red",

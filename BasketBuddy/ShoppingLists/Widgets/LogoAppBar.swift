@@ -11,7 +11,7 @@ struct LogoAppBar<Content: View>: View {
         let customFont = UIFont(name: "Modak", size: 34) ?? UIFont.systemFont(ofSize: 34)
         appearance.titleTextAttributes = [
             .foregroundColor: UIColor(named: "RoyalBlue") ?? UIColor.darkGray,
-            .font: customFont
+            .font: customFont,
         ]
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
@@ -31,13 +31,10 @@ struct LogoAppBar<Content: View>: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                    .controlSize(.extraLarge)
-                    .padding(.top, 20)
+                        Label("Add Item", systemImage: "plus.app")
+                    }.controlSize(.extraLarge).padding(.top, 20)
                 }
-            }
-            .padding(.top, 20)
+            }.padding(.top, 20)
     }
 
     private func addItem() {}

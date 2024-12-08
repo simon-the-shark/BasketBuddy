@@ -8,14 +8,13 @@
 import Foundation
 
 extension ShoppingListsListView {
-    
     class ViewModel: ObservableObject {
         @Published var shoppingLists: [ShoppingList] = []
-        
+
         init() {
             fetchShoppingLists()
         }
-        
+
         func fetchShoppingLists() {
             Task {
                 shoppingLists = await ShoppingListsRepository.shared.fetchShoppingLists()

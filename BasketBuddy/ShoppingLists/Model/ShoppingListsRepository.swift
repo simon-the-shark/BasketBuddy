@@ -2,10 +2,10 @@ import Foundation
 
 class ShoppingListsRepository {
     static let shared = ShoppingListsRepository()
-    private init(){}
+    private init() {}
     private let apiURL = URL(string: "https://basketbuddy.sharkserver.kowalinski.dev/api/v1/shopping-lists/")!
-    private let authToken = "" 
-    
+    private let authToken = ""
+
     func fetchShoppingLists() async -> [ShoppingList] {
         var request = URLRequest(url: apiURL)
         request.setValue("Token \(authToken)", forHTTPHeaderField: "Authorization")
