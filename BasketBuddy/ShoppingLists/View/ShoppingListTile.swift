@@ -14,7 +14,7 @@ struct ShoppingListTile: View {
 
     var body: some View {
         NavigationLink {
-            Text("Item at ")
+            ShoppingListDetailView(objectId: item.id)
         } label: {
             Button {
                 // Add your edit action here

@@ -54,6 +54,7 @@ struct ShoppingListsListView: View {
             .onAppear {
                 viewModel.fetchShoppingLists(with: authService)
             }
+            .navigationTitle("BasketBuddy")
         }
     }
 }

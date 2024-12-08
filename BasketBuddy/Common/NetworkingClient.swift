@@ -46,9 +46,6 @@ class NetworkingClient {
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        if let httpResponse = response as? HTTPURLResponse {
-            print("HTTP Status Code: \(httpResponse.statusCode)")
-        }
         return (data, response)
     }
 }

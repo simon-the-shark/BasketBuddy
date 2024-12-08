@@ -18,7 +18,7 @@ class ShoppingListsRepository {
 
     func removeList(with: AuthService, item: ShoppingList) async -> Bool {
         do {
-            let (data, response) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)/", method: "DELETE", headers: [
+            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)/", method: "DELETE", headers: [
                 "Authorization": "Token \(with.authState.tokenRequired)",
             ])
             return true
@@ -30,11 +30,10 @@ class ShoppingListsRepository {
     func editList(with: AuthService, item: ShoppingList) async -> Bool {
         do {
             let jsonData = try JSONEncoder().encode(item)
-            let (data, response) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)/", method: "PUT", headers: [
+            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)/", method: "PUT", headers: [
                 "Authorization": "Token \(with.authState.tokenRequired)",
             ], body: jsonData)
-            print("Data: \(String(data: data, encoding: .utf8) ?? "No data")")
-            print("Response: \(response)")
+
             return true
         } catch {
             return false
@@ -44,11 +43,10 @@ class ShoppingListsRepository {
     func addList(with: AuthService, item: ShoppingListTemplate) async -> Bool {
         do {
             let jsonData = try JSONEncoder().encode(item)
-            let (data, response) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/", method: "POST", headers: [
+            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/", method: "POST", headers: [
                 "Authorization": "Token \(with.authState.tokenRequired)",
             ], body: jsonData)
-            print("Data: \(String(data: data, encoding: .utf8) ?? "No data")")
-            print("Response: \(response)")
+
             return true
         } catch {
             return false
