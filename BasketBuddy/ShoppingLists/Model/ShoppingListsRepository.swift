@@ -18,11 +18,12 @@ class ShoppingListsRepository {
 
     func removeList(with: AuthService, item: ShoppingList) async -> Bool {
         do {
-            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)", headers: [
+            let (data, response) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(item.id)/", method: "DELETE", headers: [
                 "Authorization": "Token \(with.authState.tokenRequired)",
             ])
+            print("Data: \(String(data: data, encoding: .utf8) ?? "No data")")
+            print("Response: \(response)")
             return true
-
         } catch {
             return false
         }

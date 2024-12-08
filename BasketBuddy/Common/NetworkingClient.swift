@@ -27,6 +27,9 @@ class NetworkingClient {
     static let shared = NetworkingClient()
 
     func makeRequest(endpoint: String, method: String = "GET", headers: [String: String]? = nil, body: Data? = nil) async throws -> (Data, URLResponse) {
+        if !endpoint.hasSuffix("/") {
+            fatalError("Endpoint must end with '/'")
+        }
         var request = URLRequest(url: url.appendingPathComponent(endpoint))
         request.httpMethod = method
 

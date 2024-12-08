@@ -11,20 +11,50 @@ extension ShoppingListsListView {
     class ViewModel: ObservableObject {
         @Published var shoppingLists: [ShoppingList] = []
 
+        @Published var dialogInputText = ""
+        @Published var listUnderEditing: ShoppingList? = nil
+        @Published var isPresented: Bool = false
+        var isDialogInEditingMode: Bool {
+            return listUnderEditing != nil
+        }
+
         func fetchShoppingLists(with: AuthService) {
             Task {
-                shoppingLists = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
+                let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
+                DispatchQueue.main.async {
+                    self.shoppingLists = newData
+                }
             }
         }
 
-        func removeShoppingList(at index: Int, with: AuthService) {
-            let item = shoppingLists.remove(at: index)
+        func removeShoppingList(item: ShoppingList, with: AuthService) {
             Task {
                 let success = await ShoppingListsRepository.shared.removeList(with: with, item: item)
-                if !success {
-                    shoppingLists.append(item)
+                if success {
+                    fetchShoppingLists(with: with)
                 }
             }
+        }
+
+        func cancelDialog() {
+            isPresented = false
+            listUnderEditing = nil
+        }
+
+        func saveDialog() {
+            isPresented = false
+            listUnderEditing = nil
+        }
+
+        func showAddListDialog() {
+            listUnderEditing = nil
+            isPresented = true
+        }
+
+        func showEditListDialog(item: ShoppingList) {
+            dialogInputText = item.name
+            listUnderEditing = item
+            isPresented = true
         }
     }
 }

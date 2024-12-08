@@ -31,11 +31,15 @@ struct LogoAppBar<Content: View>: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus.app")
+                        Label("Dodaj listę", systemImage: "plus.app")
                     }.controlSize(.extraLarge).padding(.top, 20)
                 }
             }.padding(.top, 20)
     }
 
     private func addItem() {}
+}
+
+#Preview {
+    ShoppingListsListView().environmentObject(AuthService())
 }

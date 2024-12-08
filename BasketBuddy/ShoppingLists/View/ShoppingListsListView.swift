@@ -17,41 +17,17 @@ struct ShoppingListsListView: View {
                 List {
                     Section {
                         ForEach($viewModel.shoppingLists) { $item in
-                            NavigationLink {
-                                Text("Item at ")
-                            } label: {
-                                Button {
-                                    // Add your edit action here
-                                } label: {
-                                    Label("Favourite", systemImage: "star")
-                                        .labelStyle(IconOnlyLabelStyle())
-                                        .font(.system(size: 16))
-                                }
-
-                                Text("Item at \(item.name)")
-                                    .font(.body)
-                                    .padding(8.0)
-                            }
-                            .swipeActions {
-                                Button {
-                                    // Add your edit action here
-                                } label: {
-                                    Label("Edit", systemImage: "pencil")
-                                }
-                                .tint(.orange)
-                                Button(role: .destructive) {
-                                    // Add your delete action here
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                            ShoppingListTile(item: item, viewModel: viewModel)
                         }
-                    } header: {
+                    }
+                    header: {
                         Text("Aktywne listy zakupów").padding(.top, 0)
                     }
                     HStack {
                         Spacer()
-                        Button(action: {}) {
+                        Button {
+                            viewModel.showAddListDialog()
+                        } label: {
                             Text("Dodaj listę")
                         }
                         Spacer()
@@ -59,6 +35,16 @@ struct ShoppingListsListView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .background(Color("GrayBackground"))
+                .alert((viewModel.isDialogInEditingMode) ? "Edytuj nazwę listy" : "Dodajesz nową listę", isPresented: $viewModel.isPresented) {
+                    TextField("Nazwa listy", text: $viewModel.dialogInputText)
+
+                    Button("Anuluj", role: .cancel, action: viewModel.cancelDialog)
+
+                    Button(viewModel.isDialogInEditingMode ? "Zapisz" : "Dodaj", action: viewModel.saveDialog)
+
+                } message: {
+                    Text(viewModel.isDialogInEditingMode ? "Edytujesz listę \(viewModel.listUnderEditing!.name)" : "Wpisz nazwę nowej listy")
+                }
             }.onAppear {
                 viewModel.fetchShoppingLists(with: authService)
             }
