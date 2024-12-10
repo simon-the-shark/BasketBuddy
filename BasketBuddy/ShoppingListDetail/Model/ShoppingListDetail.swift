@@ -17,7 +17,7 @@ struct ShoppingListItemTemplate: Codable {
 struct ShoppingListItem: Codable, Identifiable {
     let id: Int
     let product: Product
-    let quantity: Int
+    var quantity: Int
     let unit: String
     let isBought: Bool
 }

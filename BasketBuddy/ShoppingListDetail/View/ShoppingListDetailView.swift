@@ -20,12 +20,7 @@ struct ShoppingListDetailView: View {
                 List {
                     ForEach(viewModel.items) {
                         item in
-                        HStack {
-                            Text(item.unit)
-                            Spacer()
-                            Text("\(item.id)")
-                                .foregroundColor(.gray)
-                        }
+                        ShoppingItemTile(item: item, viewModel: viewModel)
                     }
                     HStack {
                         Spacer()
@@ -39,7 +34,7 @@ struct ShoppingListDetailView: View {
                 }
             }
         }
-        .navigationTitle(viewModel.shoppingListDetail?.name ?? "Brak Nazwy")
+        .navigationTitle(viewModel.shoppingListDetail?.name ?? "")
         .toolbarTitleDisplayMode(.large)
         .scrollContentBackground(.hidden)
         .background(Color("GrayBackground"))

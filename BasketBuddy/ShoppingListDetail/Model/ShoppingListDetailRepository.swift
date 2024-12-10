@@ -36,4 +36,20 @@ class ShoppingListDetailRepository {
             return false
         }
     }
+
+    func changeQuantity(with: AuthService, listId: Int, itemId: Int, newItem: ShoppingListItemTemplate) async -> Bool {
+        do {
+            let jsonData = try JSONEncoder().encode(newItem)
+            let (data, resp) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(listId)/items/\(itemId)/", method: "PUT", headers: [
+                "Authorization": "Token \(with.authState.tokenRequired)",
+            ], body: jsonData)
+            print(
+                String(data: data, encoding: .utf8) ?? "No response data"
+            )
+            print(resp)
+            return true
+        } catch {
+            return false
+        }
+    }
 }
