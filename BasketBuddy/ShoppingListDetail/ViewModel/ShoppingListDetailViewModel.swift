@@ -25,6 +25,18 @@ extension ShoppingListDetailView {
             return shoppingListDetail?.items ?? []
         }
 
+        var boughtItems: [ShoppingListItem] {
+            return items.filter {
+                item in item.isBought
+            }
+        }
+
+        var notBoughtItems: [ShoppingListItem] {
+            return items.filter {
+                item in !item.isBought
+            }
+        }
+
         @Published var isSheetShown = false
 
         private let repository = ShoppingListDetailRepository.shared
@@ -55,7 +67,17 @@ extension ShoppingListDetailView {
         func changeQuantity(with: AuthService, item: ShoppingListItem, newQuantity: Int) {
             Task {
                 let template = ShoppingListItemTemplate(product_id: item.product.id, quantity: newQuantity, unit: item.unit, isBought: item.isBought)
-                let _ = await repository.changeQuantity(with: with, listId: objectId, itemId: item.id, newItem: template)
+                let _ = await repository.updateItem(with: with, listId: objectId, itemId: item.id, newItem: template)
+            }
+        }
+
+        func changeIsBought(with: AuthService, item: ShoppingListItem, isBought: Bool) {
+            Task {
+                let template = ShoppingListItemTemplate(product_id: item.product.id, quantity: item.quantity, unit: item.unit, isBought: isBought)
+                let success = await repository.updateItem(with: with, listId: objectId, itemId: item.id, newItem: template)
+                if success {
+                    self.loadObject(with: with, id: objectId)
+                }
             }
         }
     }

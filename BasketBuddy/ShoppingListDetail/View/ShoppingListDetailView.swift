@@ -18,10 +18,13 @@ struct ShoppingListDetailView: View {
                 ProgressView("Loading...")
             } else {
                 List {
-                    ForEach(viewModel.items) {
-                        item in
-                        ShoppingItemTile(item: item, viewModel: viewModel)
+                    Section {
+                        ForEach(viewModel.notBoughtItems) {
+                            item in
+                            ShoppingItemTile(item: item, viewModel: viewModel)
+                        }
                     }
+
                     HStack {
                         Spacer()
                         Button {
@@ -30,6 +33,17 @@ struct ShoppingListDetailView: View {
                             Text("Dodaj produkt")
                         }
                         Spacer()
+                    }
+
+                    if !viewModel.boughtItems.isEmpty {
+                        Section {
+                            ForEach(viewModel.boughtItems) {
+                                item in
+                                ShoppingItemTile(item: item, viewModel: viewModel)
+                            }
+                        } header: {
+                            Text("Zakupione")
+                        }
                     }
                 }
             }
