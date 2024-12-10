@@ -24,13 +24,15 @@ struct ShoppingItemTile: View {
                         .font(.system(size: 20)).padding(.trailing)
                 }
             }
+            CategoryIcon(category: item.product.category, isEnabled: !item.isBought)
+                .padding(.trailing)
             VStack(alignment: .leading) {
                 Text(item.product.name)
-                    .font(.headline)
+                    .font(.subheadline)
                     .foregroundColor(item.isBought ? .gray : .primary)
                 Text("\(quantity) \(item.unit)")
                     .font(.subheadline)
-                    .foregroundColor(item.isBought ? .gray : .primary)
+                    .foregroundColor(.gray)
             }
             Spacer()
             if !item.isBought {

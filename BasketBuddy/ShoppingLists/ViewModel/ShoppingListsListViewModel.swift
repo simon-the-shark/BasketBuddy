@@ -14,6 +14,8 @@ extension ShoppingListsListView {
         @Published var dialogInputText = ""
         @Published var listUnderEditing: ShoppingList? = nil
         @Published var isPresented: Bool = false
+        @Published var isLoading: Bool = true
+
         var isDialogInEditingMode: Bool {
             return listUnderEditing != nil
         }
@@ -23,6 +25,7 @@ extension ShoppingListsListView {
                 let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
                 DispatchQueue.main.async {
                     self.shoppingLists = newData
+                    self.isLoading = false
                 }
             }
         }

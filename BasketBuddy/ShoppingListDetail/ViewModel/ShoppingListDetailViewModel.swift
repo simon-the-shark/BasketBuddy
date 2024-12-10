@@ -37,6 +37,10 @@ extension ShoppingListDetailView {
             }
         }
 
+        var itemsGroupedByCategory: [Product.Category: [ShoppingListItem]] {
+            return Dictionary(grouping: notBoughtItems, by: { $0.product.category })
+        }
+
         @Published var isSheetShown = false
 
         private let repository = ShoppingListDetailRepository.shared

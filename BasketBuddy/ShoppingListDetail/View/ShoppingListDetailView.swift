@@ -18,13 +18,14 @@ struct ShoppingListDetailView: View {
                 ProgressView("Loading...")
             } else {
                 List {
-                    Section {
-                        ForEach(viewModel.notBoughtItems) {
-                            item in
-                            ShoppingItemTile(item: item, viewModel: viewModel)
+                    ForEach(Array(viewModel.itemsGroupedByCategory.keys)) { category in
+                        Section(header: Text(category.name)) {
+                            ForEach(viewModel.itemsGroupedByCategory[category] ?? []) {
+                                item in
+                                ShoppingItemTile(item: item, viewModel: viewModel)
+                            }
                         }
                     }
-
                     HStack {
                         Spacer()
                         Button {
