@@ -25,7 +25,7 @@ class ShoppingListDetailRepository {
 
     func addProduct(with: AuthService, listId: Int, product: Product) async -> Bool {
         do {
-            let item = ShoppingListItemTemplate(product_id: product.id, quantity: 1, unit: "PIECES", isBought: false)
+            let item = ShoppingListItemTemplate(product_id: product.id, quantity: 1, unit: Unit.pieces, isBought: false)
             let jsonData = try JSONEncoder().encode(item)
             let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/shopping-lists/\(listId)/items/", method: "POST", headers: [
                 "Authorization": "Token \(with.authState.tokenRequired)",

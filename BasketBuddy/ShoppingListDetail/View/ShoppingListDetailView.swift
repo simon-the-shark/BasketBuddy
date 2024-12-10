@@ -18,7 +18,9 @@ struct ShoppingListDetailView: View {
                 ProgressView("Loading...")
             } else {
                 List {
-                    ForEach(Array(viewModel.itemsGroupedByCategory.keys)) { category in
+                    ForEach(Array(viewModel.itemsGroupedByCategory.keys.sorted(by: { a, b in
+                        a.id > b.id
+                    }))) { category in
                         Section(header: Text(category.name)) {
                             ForEach(viewModel.itemsGroupedByCategory[category] ?? []) {
                                 item in

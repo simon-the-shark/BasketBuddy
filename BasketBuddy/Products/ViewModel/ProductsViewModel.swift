@@ -12,6 +12,10 @@ extension ProductsView {
         private let repository = ProductsRepository.shared
         @Published var products: [Product] = []
 
+        var groupProductsByCategory: [Product.Category: [Product]] {
+            return Dictionary(grouping: products, by: { $0.category })
+        }
+
         func loadProducts(with: AuthService) {
             Task {
                 let products = await repository.getAll(with: with)

@@ -30,7 +30,7 @@ struct ShoppingItemTile: View {
                 Text(item.product.name)
                     .font(.subheadline)
                     .foregroundColor(item.isBought ? .gray : .primary)
-                Text("\(quantity) \(item.unit)")
+                Text("\(quantity) \(item.unit.polishTranslation)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }

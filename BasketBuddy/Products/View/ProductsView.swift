@@ -18,17 +18,28 @@ struct ProductsView: View {
     }
 
     var body: some View {
-        VStack {
+        List {
             Text("Dodaj produkt do listy")
                 .font(.headline)
                 .padding()
 
-            List(viewModel.products) { product in
-                Button {
-                    action(product)
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Text(product.name)
+            ForEach(Array(viewModel.groupProductsByCategory.keys)) { category in
+                Section(header: Text(category.name)) {
+                    ForEach(viewModel.groupProductsByCategory[category] ?? []) {
+                        product in
+                        Button {
+                            action(product)
+                            presentationMode.wrappedValue.dismiss()
+                        } label: {
+                            HStack {
+                                CategoryIcon(category: product.category, isEnabled: true)
+                                    .padding(.trailing)
+                                Text(product.name)
+                                    .font(.subheadline)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                    }
                 }
             }
 
