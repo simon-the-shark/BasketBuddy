@@ -17,7 +17,7 @@ struct ShoppingListsListView: View {
                 List {
                     Section {
                         ForEach($viewModel.shoppingLists) { $item in
-                            ShoppingListTile(item: item, viewModel: viewModel)
+                            ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel )
                         }
                     }
                     header: {

@@ -37,4 +37,10 @@ class AuthRepository {
         try localRepository.saveTokenAndUser(token, userId: userId)
         return AuthState(data: .init(token: token, userId: userId))
     }
+    
+    func logout() async throws -> AuthState {
+        try await remoteRepository.logout(currAuth: getAuthState())
+        try localRepository.deleteTokenAndUser()
+        return AuthState(data: nil)
+    }
 }

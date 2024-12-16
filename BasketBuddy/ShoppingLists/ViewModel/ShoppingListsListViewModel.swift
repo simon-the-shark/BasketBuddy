@@ -23,8 +23,9 @@ extension ShoppingListsListView {
         func fetchShoppingLists(with: AuthService) {
             Task {
                 let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
+                let activeLists = newData.filter { $0.isActive }
                 DispatchQueue.main.async {
-                    self.shoppingLists = newData
+                    self.shoppingLists = activeLists
                     self.isLoading = false
                 }
             }

@@ -27,4 +27,13 @@ class RemoteAuthRepository {
     func loginForToken(email: String, password: String) async throws -> (String, Int) {
         return try await getToken(email: email.lowercased(), password: password, endpoint: "/api/v1/auth/login/")
     }
+    
+    func logout(currAuth: AuthState) async throws {
+        let (data, response) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/auth/logout", method: "POST", headers: [
+            "Authorization": "Token \(currAuth.tokenRequired)"])
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+            throw URLError(.badServerResponse)
+        }
+
+    }
 }

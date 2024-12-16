@@ -23,13 +23,13 @@ struct TabScreenView: View {
                 }
                 .tag(Tab.home)
 
-            Text("Historia")
+            HistoryView()
                 .tabItem {
                     Label("Historia", systemImage: "clock.arrow.2.circlepath")
                 }
                 .tag(Tab.history)
 
-            Text("Moje produkty")
+            MyProductsView()
                 .tabItem {
                     Label("Moje produkty", systemImage: "heart.text.clipboard")
                     

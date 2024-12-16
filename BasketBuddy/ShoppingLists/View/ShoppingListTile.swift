@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct ShoppingListTile: View {
+    enum TileMode {
+        case active, historical
+    }
+    
     var item: ShoppingList
+    var mode: TileMode
     @ObservedObject var viewModel: ShoppingListsListView.ViewModel
     @EnvironmentObject var authService: AuthService
-
+    
+    
+    
     var body: some View {
         NavigationLink {
             ShoppingListDetailView(objectId: item.id)
