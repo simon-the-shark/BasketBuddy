@@ -10,10 +10,12 @@ class ProductsRepository {
         if !cachedProducts.isEmpty {
             return cachedProducts
         }
-
+        guard let token = with.authState.data?.token else {
+            return []
+        }
         do {
             let (data, _) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/products/", headers: [
-                "Authorization": "Token \(with.authState.tokenRequired)",
+                "Authorization": "Token \(token)",
             ])
             let products = try JSONDecoder().decode([Product].self, from: data)
             cachedProducts = products

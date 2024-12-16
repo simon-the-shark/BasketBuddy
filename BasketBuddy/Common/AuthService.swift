@@ -33,10 +33,8 @@ class AuthService: ObservableObject {
         }
     }
 
-    func logout() async throws {
-        let authState = try await authRepository.logout()
-        DispatchQueue.main.async {
-            self.authState = authState
-        }
+    func logout() throws {
+        let authState = try authRepository.logout(with: self)
+        self.authState = authState
     }
 }

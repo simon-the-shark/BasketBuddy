@@ -41,7 +41,7 @@ struct ShoppingListTile: View {
             .tint(.orange)
             Button(role: .destructive) {
                 withAnimation {
-                    if(mode == TileMode.historical){
+                    if mode == TileMode.historical {
                         viewModel.removeShoppingList(item: item, with: authService)
                     } else {
                         viewModel.deactivateShoppingList(item: item, with: authService)

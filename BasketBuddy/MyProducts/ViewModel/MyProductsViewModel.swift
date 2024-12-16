@@ -19,8 +19,11 @@ import Foundation
 extension MyProductsView {
     class ViewModel: ObservableObject {
         func logout(with: AuthService) {
-            Task {
-                try await with.logout()
+            do {
+                try with.logout()
+            } catch {
+                // ignore
+                print(error)
             }
         }
     }

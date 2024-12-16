@@ -23,6 +23,7 @@ class AuthRepository {
         guard let userId = userId else {
             return AuthState(data: nil)
         }
+
         return AuthState(data: .init(token: token, userId: userId))
     }
 
@@ -38,8 +39,13 @@ class AuthRepository {
         return AuthState(data: .init(token: token, userId: userId))
     }
 
-    func logout() async throws -> AuthState {
-        try await remoteRepository.logout(currAuth: getAuthState())
+    func logout(with: AuthService) throws -> AuthState {
+        guard let token = with.authState.data?.token else {
+            return AuthState(data: nil)
+        }
+        Task { [token] in
+            try await remoteRepository.logout(token: token)
+        }
         try localRepository.deleteTokenAndUser()
         return AuthState(data: nil)
     }
