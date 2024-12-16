@@ -13,8 +13,6 @@ extension ShoppingListDetailView {
             fatalError("objectId has not been initialized")
         }()
 
-        var parentViewModel: ShoppingListsListView.ViewModel? = nil
-
         @Published var shoppingListDetail: ShoppingListDetail? = nil
 
         var isLoading: Bool {
@@ -81,6 +79,19 @@ extension ShoppingListDetailView {
                 let success = await repository.updateItem(with: with, listId: objectId, itemId: item.id, newItem: template)
                 if success {
                     self.loadObject(with: with, id: objectId)
+                }
+            }
+        }
+
+        func activateThisListAgain(with: AuthService, onDone: @escaping () -> Void) {
+            guard let curr = shoppingListDetail else {
+                return
+            }
+            Task {
+                let newData = ShoppingList(id: curr.id, name: curr.name, color: curr.color, emoji: curr.emoji, isActive: true, owner: curr.owner)
+                let _ = await ShoppingListsRepository.shared.editList(with: with, item: newData)
+                DispatchQueue.main.async {
+                    onDone()
                 }
             }
         }

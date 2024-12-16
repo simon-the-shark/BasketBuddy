@@ -11,6 +11,7 @@ struct ShoppingListDetailView: View {
     @StateObject var viewModel: ViewModel = .init()
     @EnvironmentObject private var authService: AuthService
     var objectId: Int
+    var isListActive: Bool
 
     var body: some View {
         HStack {
@@ -18,35 +19,10 @@ struct ShoppingListDetailView: View {
                 ProgressView("Loading...")
             } else {
                 List {
-                    ForEach(Array(viewModel.itemsGroupedByCategory.keys.sorted(by: { a, b in
-                        a.id > b.id
-                    }))) { category in
-                        Section(header: Text(category.name)) {
-                            ForEach(viewModel.itemsGroupedByCategory[category] ?? []) {
-                                item in
-                                ShoppingItemTile(item: item, viewModel: viewModel)
-                            }
-                        }
-                    }
-                    HStack {
-                        Spacer()
-                        Button {
-                            viewModel.showProductSheet()
-                        } label: {
-                            Text("Dodaj produkt")
-                        }
-                        Spacer()
-                    }
-
-                    if !viewModel.boughtItems.isEmpty {
-                        Section {
-                            ForEach(viewModel.boughtItems) {
-                                item in
-                                ShoppingItemTile(item: item, viewModel: viewModel)
-                            }
-                        } header: {
-                            Text("Zakupione")
-                        }
+                    if isListActive {
+                        ActiveListContents(viewModel: viewModel)
+                    } else {
+                        InactiveListContents(viewModel: viewModel)
                     }
                 }
             }

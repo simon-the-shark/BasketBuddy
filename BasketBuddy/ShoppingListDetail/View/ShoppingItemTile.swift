@@ -13,36 +13,40 @@ struct ShoppingItemTile: View {
     @EnvironmentObject var authService: AuthService
     @State var quantity: Int = 0
 
+    var disabled: Bool = false
+
     var body: some View {
         HStack {
-            if item.isBought {
+            if disabled || item.isBought {
                 Button {
-                    self.viewModel.changeIsBought(with: authService, item: item, isBought: false)
+                    if !disabled {
+                        self.viewModel.changeIsBought(with: authService, item: item, isBought: false)
+                    }
                 } label: {
                     Label("Odznacz jako zakupione", systemImage: "checkmark.square.fill")
                         .labelStyle(IconOnlyLabelStyle())
                         .font(.system(size: 20)).padding(.trailing)
                 }
             }
-            CategoryIcon(category: item.product.category, isEnabled: !item.isBought)
+            CategoryIcon(category: item.product.category, isEnabled: !item.isBought && !disabled)
                 .padding(.trailing)
             VStack(alignment: .leading) {
                 Text(item.product.name)
                     .font(.subheadline)
-                    .foregroundColor(item.isBought ? .gray : .primary)
+                    .foregroundColor(item.isBought || disabled ? .gray : .primary)
                 Text("\(quantity) \(item.unit.polishTranslation)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
             Spacer()
-            if !item.isBought {
+            if !item.isBought && !disabled {
                 Stepper(value: $quantity, in: 0 ... 100) {
                     Text("")
                 }
             }
 
         }.swipeActions(edge: .leading) {
-            if !item.isBought {
+            if !item.isBought && !disabled {
                 Button(action: {
                     self.viewModel.changeIsBought(with: authService, item: item, isBought: true)
                 }) {

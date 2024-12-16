@@ -19,7 +19,7 @@ struct ShoppingListTile: View {
 
     var body: some View {
         NavigationLink {
-            ShoppingListDetailView(objectId: item.id)
+            ShoppingListDetailView(objectId: item.id, isListActive: mode == TileMode.active)
         } label: {
             if mode == TileMode.active {
                 FavouriteButton()
