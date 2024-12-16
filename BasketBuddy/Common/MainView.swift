@@ -13,7 +13,7 @@ struct MainView: View {
 
     var body: some View {
         if authService.authState.isAuthenticated {
-            ShoppingListsListView()
+            TabScreenView()
         } else {
             AuthView()
         }
