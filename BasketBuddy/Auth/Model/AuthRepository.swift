@@ -43,7 +43,7 @@ class AuthRepository {
         guard let token = with.authState.data?.token else {
             return AuthState(data: nil)
         }
-        Task { [token] in
+        Task {
             try await remoteRepository.logout(token: token)
         }
         try localRepository.deleteTokenAndUser()

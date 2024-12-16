@@ -14,7 +14,6 @@ struct AuthView: View {
 
     var body: some View {
         VStack {
-            Text("Zalogowano: \(authService.authState.isAuthenticated)")
             TextField("Email", text: $viewModel.email)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
@@ -29,37 +28,41 @@ struct AuthView: View {
                     .padding()
             }
 
-            Button(action: {
-                Task {
-                    await viewModel.login(with: authService)
+            if viewModel.isLoggingIn {
+                Button(action: {
+                    Task {
+                        await viewModel.login(with: authService)
+                    }
+                }) {
+                    Text("Login")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                 }
-            }) {
-                Text("Login")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+                .padding()
             }
-            .padding()
 
-            Button(action: {
-                Task {
-                    await viewModel.signup(with: authService)
+            else {
+                Button(action: {
+                    Task {
+                        await viewModel.signup(with: authService)
+                    }
+                }) {
+                    Text("Signup")
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
                 }
-            }) {
-                Text("Signup")
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
+                .padding()
             }
-            .padding()
 
             Button(action: {
                 viewModel.toggleIsLogginIn()
             }) {
                 Text(viewModel.isLoggingIn ?
-                    "Masz już konto? Zarejestruj się" : "Nie masz konta? Zaloguj się")
+                    "Nie masz konta? Zarejestruj się" : "Masz już konto? Zaloguj się")
                     .padding()
             }
 
