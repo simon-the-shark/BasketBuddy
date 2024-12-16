@@ -7,24 +7,17 @@
 
 import Foundation
 
-
 extension HistoryView {
-    class ViewModel: ObservableObject {
-        private let repository = ShoppingListsRepository.shared
-        @Published var historicalLists: [ShoppingList] = []
-        @Published var isLoading = true
-        
-        func fetchHistoricalLists(with: AuthService) {
+    class ViewModel: ShoppingListsListView.ViewModel {
+        override func fetchShoppingLists(with: AuthService) {
             Task {
                 let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
-                let historicalLists = newData.filter { !$0.isActive }
+                let historicalLists = newData.filter { !$0.isActive } // ! changed here
                 DispatchQueue.main.async {
-                    self.historicalLists = historicalLists
+                    self.shoppingLists = historicalLists
                     self.isLoading = false
                 }
             }
         }
-
-        
     }
 }

@@ -12,7 +12,7 @@ struct MainView: View {
     @EnvironmentObject private var authService: AuthService
 
     var body: some View {
-        if authService.authState.isAuthenticated {
+        if authService.authState.data != nil {
             TabScreenView()
         } else {
             AuthView()

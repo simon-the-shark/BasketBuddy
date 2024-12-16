@@ -14,38 +14,28 @@ struct ShoppingListsListView: View {
     var body: some View {
         NavigationView {
             LogoAppBar {
-                List {
-                    Section {
-                        ForEach($viewModel.shoppingLists) { $item in
-                            ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel )
+                EditNameDialog(viewModel: viewModel) {
+                    List {
+                        Section {
+                            ForEach($viewModel.shoppingLists) { $item in
+                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel)
+                            }
+                        }
+                        header: {
+                            Text("Aktywne listy zakupów").padding(.top, 0)
+                        }
+                        HStack {
+                            Spacer()
+                            Button {
+                                viewModel.showAddListDialog()
+                            } label: {
+                                Text("Dodaj listę")
+                            }
+                            Spacer()
                         }
                     }
-                    header: {
-                        Text("Aktywne listy zakupów").padding(.top, 0)
-                    }
-                    HStack {
-                        Spacer()
-                        Button {
-                            viewModel.showAddListDialog()
-                        } label: {
-                            Text("Dodaj listę")
-                        }
-                        Spacer()
-                    }
-                }
-                .scrollContentBackground(.hidden)
-                .background(Color("GrayBackground"))
-                .alert((viewModel.isDialogInEditingMode) ? "Edytuj nazwę listy" : "Dodajesz nową listę", isPresented: $viewModel.isPresented) {
-                    TextField("Nazwa listy", text: $viewModel.dialogInputText)
-
-                    Button("Anuluj", role: .cancel, action: viewModel.cancelDialog)
-
-                    Button(viewModel.isDialogInEditingMode ? "Zapisz" : "Dodaj") {
-                        viewModel.saveDialog(with: authService)
-                    }
-
-                } message: {
-                    Text(viewModel.isDialogInEditingMode ? "Edytujesz listę \(viewModel.listUnderEditing!.name)" : "Wpisz nazwę nowej listy")
+                    .scrollContentBackground(.hidden)
+                    .background(Color("GrayBackground"))
                 }
             } action: {
                 viewModel.showAddListDialog()

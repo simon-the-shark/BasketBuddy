@@ -39,6 +39,16 @@ extension ShoppingListsListView {
                 }
             }
         }
+        
+        func deactivateShoppingList(item: ShoppingList, with: AuthService) {
+            Task {
+                let newItem = ShoppingList(id: item.id, name: item.name, color: item.color, emoji: item.emoji, isActive: false, owner: item.owner)
+                let success = await ShoppingListsRepository.shared.editList(with: with, item: newItem)
+                if success {
+                    fetchShoppingLists(with: with)
+                }
+            }
+        }
 
         func cancelDialog() {
             isPresented = false

@@ -11,24 +11,21 @@ struct ShoppingListTile: View {
     enum TileMode {
         case active, historical
     }
-    
+
     var item: ShoppingList
     var mode: TileMode
     @ObservedObject var viewModel: ShoppingListsListView.ViewModel
     @EnvironmentObject var authService: AuthService
-    
-    
-    
+
     var body: some View {
         NavigationLink {
             ShoppingListDetailView(objectId: item.id)
         } label: {
-            Button {
-                // Add your edit action here
-            } label: {
-                Label("Nie jest ulubiony", systemImage: "star")
+            if mode == TileMode.active {
+                FavouriteButton()
+            } else {
+                Label("Historyczna lista", systemImage: "text.book.closed")
                     .labelStyle(IconOnlyLabelStyle())
-                    .font(.system(size: 16))
             }
 
             Text(item.name)
@@ -44,7 +41,11 @@ struct ShoppingListTile: View {
             .tint(.orange)
             Button(role: .destructive) {
                 withAnimation {
-                    viewModel.removeShoppingList(item: item, with: authService)
+                    if(mode == TileMode.historical){
+                        viewModel.removeShoppingList(item: item, with: authService)
+                    } else {
+                        viewModel.deactivateShoppingList(item: item, with: authService)
+                    }
                 }
             } label: {
                 Label("Usuń", systemImage: "trash")

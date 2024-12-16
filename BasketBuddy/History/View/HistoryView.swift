@@ -8,13 +8,30 @@
 import SwiftUI
 
 struct HistoryView: View {
+    @StateObject var viewModel: ViewModel = .init()
+    @EnvironmentObject private var authService: AuthService
+
     var body: some View {
-        NavigationStack {
-            List {
-                Section(header: Text("Historyczne listy zakupów")) {
-                    Text("AA")
+        NavigationView {
+            EditNameDialog(viewModel: viewModel) {
+                List {
+                    Section {
+                        ForEach($viewModel.shoppingLists) { $item in
+                            ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, viewModel: viewModel)
+                        }
+                    }
+                    header: {
+                        Text("Historyczne listy zakupów").padding(.top, 0)
+                    }
                 }
+                .scrollContentBackground(.hidden)
+                .background(Color("GrayBackground"))
             }
+
+            .onAppear {
+                viewModel.fetchShoppingLists(with: authService)
+            }
+            .navigationTitle("Historia Zakupów")
         }
     }
 }

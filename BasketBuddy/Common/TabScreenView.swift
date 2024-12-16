@@ -32,11 +32,9 @@ struct TabScreenView: View {
             MyProductsView()
                 .tabItem {
                     Label("Moje produkty", systemImage: "heart.text.clipboard")
-                    
                 }
                 .tag(Tab.myProducts)
         }
-        
     }
 }
 

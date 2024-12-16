@@ -10,18 +10,17 @@ import SwiftUI
 struct MyProductsView: View {
     @EnvironmentObject private var authService: AuthService
     @StateObject private var viewModel: ViewModel = .init()
-    
+
     var body: some View {
         NavigationView {
-            List {
-            }
-            .navigationBarTitle("My Products")
-            .navigationBarItems(trailing: Button(action: {
-                viewModel.logout(with: authService)
-            }) {
-                Image(systemName: "rectangle.portrait.and.arrow.right")
-                Text("Log Out")
-            })
+            List {}
+                .navigationBarTitle("My Products")
+                .navigationBarItems(trailing: Button(action: {
+                    viewModel.logout(with: authService)
+                }) {
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                    Text("Log Out")
+                })
         }
     }
 }
