@@ -11,6 +11,13 @@ struct ShoppingListsListView: View {
     @StateObject var viewModel: ViewModel = .init()
     @EnvironmentObject private var authService: AuthService
 
+    @FetchRequest(sortDescriptors: [], animation: .default)
+    private var favourites: FetchedResults<FavouriteShoppingList>
+
+    func isFav(id: Int) -> Bool {
+        return favourites.map { $0.id }.contains(Int64(id))
+    }
+
     var body: some View {
         NavigationView {
             LoadingOverlay(isLoading: viewModel.isLoading) {
@@ -23,7 +30,7 @@ struct ShoppingListsListView: View {
                             } else {
                                 Section {
                                     ForEach($viewModel.shoppingLists) { $item in
-                                        ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel)
+                                        ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, isFavourite: isFav(id: item.id), viewModel: viewModel)
                                     }
                                 }
                                 header: {

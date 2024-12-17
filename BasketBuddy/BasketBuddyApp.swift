@@ -15,7 +15,7 @@ struct BasketBuddyApp: App {
         WindowGroup {
             MainView()
                 .environmentObject(AuthService())
-//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

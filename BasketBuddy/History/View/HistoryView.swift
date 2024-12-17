@@ -20,7 +20,7 @@ struct HistoryView: View {
                     } else {
                         Section {
                             ForEach($viewModel.shoppingLists) { $item in
-                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, viewModel: viewModel)
+                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, isFavourite: false, viewModel: viewModel)
                             }
                         }
                         header: {

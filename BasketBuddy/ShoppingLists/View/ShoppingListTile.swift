@@ -14,24 +14,28 @@ struct ShoppingListTile: View {
 
     var item: ShoppingList
     var mode: TileMode
+    var isFavourite: Bool
     @ObservedObject var viewModel: ShoppingListsListView.ViewModel
     @EnvironmentObject var authService: AuthService
 
     var body: some View {
-        NavigationLink {
-            ShoppingListDetailView(objectId: item.id, isListActive: mode == TileMode.active)
-        } label: {
+        HStack {
             if mode == TileMode.active {
-                FavouriteButton()
-            } else {
-                Label("Historyczna lista", systemImage: "text.book.closed")
-                    .labelStyle(IconOnlyLabelStyle())
+                FavouriteButton(isFavourite: isFavourite, itemId: item.id)
             }
-
-            Text(item.name)
-                .font(.body)
-                .padding(8.0)
+            NavigationLink {
+                ShoppingListDetailView(objectId: item.id, isListActive: mode == TileMode.active)
+            } label: {
+                if mode == TileMode.historical {
+                    Label("Historyczna lista", systemImage: "text.book.closed")
+                        .labelStyle(IconOnlyLabelStyle())
+                }
+                Text(item.name)
+                    .font(.body)
+                    .padding(8.0)
+            }
         }
+
         .swipeActions {
             Button {
                 viewModel.showEditListDialog(item: item)
