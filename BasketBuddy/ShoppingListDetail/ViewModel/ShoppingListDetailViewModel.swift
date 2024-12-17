@@ -83,6 +83,17 @@ extension ShoppingListDetailView {
             }
         }
 
+        @Published var parentViewModel: ShoppingListsListView.ViewModel = .init()
+
+        func changeListName(with: AuthService) {
+            guard let item = shoppingListDetail else {
+                return
+            }
+            parentViewModel.showEditListDialog(item: ShoppingList(id: item.id, name: item.name, color: item.color, emoji: item.emoji, isActive: item.isActive, owner: item.owner)) {
+                self.loadObject(with: with, id: self.objectId)
+            }
+        }
+
         func activateThisListAgain(with: AuthService, onDone: @escaping () -> Void) {
             guard let curr = shoppingListDetail else {
                 return

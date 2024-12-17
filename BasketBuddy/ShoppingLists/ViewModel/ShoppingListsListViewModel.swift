@@ -65,6 +65,8 @@ extension ShoppingListsListView {
                     let success = await ShoppingListsRepository.shared.editList(with: with, item: item)
                     if success {
                         fetchShoppingLists(with: with)
+                        onEditingDialogDoneCallback?()
+                        onEditingDialogDoneCallback = nil
                     }
                 }
             } else {
@@ -85,10 +87,13 @@ extension ShoppingListsListView {
             isPresented = true
         }
 
-        func showEditListDialog(item: ShoppingList) {
+        private var onEditingDialogDoneCallback: (() -> Void)? = nil
+
+        func showEditListDialog(item: ShoppingList, onDoneCallback: (() -> Void)? = nil) {
             dialogInputText = item.name
             listUnderEditing = item
             isPresented = true
+            onEditingDialogDoneCallback = onDoneCallback
         }
     }
 }
