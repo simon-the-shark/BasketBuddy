@@ -8,6 +8,22 @@
 import CoreData
 import SwiftUI
 
+struct FavouriteButtonLabel: View {
+    var text: String
+    var systemImage: String
+    var onTap: () -> Void
+
+    var body: some View {
+        Label(text, systemImage: systemImage)
+            .labelStyle(IconOnlyLabelStyle())
+            .font(.system(size: 16))
+            .foregroundColor(.accentColor)
+            .simultaneousGesture(TapGesture().onEnded {
+                onTap()
+            })
+    }
+}
+
 struct FavouriteButton: View {
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject private var viewModel: ViewModel = .init()
@@ -17,22 +33,16 @@ struct FavouriteButton: View {
 
     var body: some View {
         if !isFavourite {
-            Button {
-                viewModel.addToFavs(with: viewContext, id: itemId)
-            } label: {
-                Label("Nie jest ulubiony", systemImage: "star")
-                    .labelStyle(IconOnlyLabelStyle())
-                    .font(.system(size: 16))
-                    .foregroundColor(.accentColor)
+            FavouriteButtonLabel(text: "Nie jest ulubiony", systemImage: "star") {
+                withAnimation {
+                    viewModel.addToFavs(with: viewContext, id: itemId)
+                }
             }
         } else {
-            Button {
-                viewModel.removeFromFavs(with: viewContext, id: itemId)
-            } label: {
-                Label("Jest ulubiony", systemImage: "star.fill")
-                    .labelStyle(IconOnlyLabelStyle())
-                    .font(.system(size: 16))
-                    .foregroundColor(.accentColor)
+            FavouriteButtonLabel(text: "Jest ulubiony", systemImage: "star.fill") {
+                withAnimation {
+                    viewModel.removeFromFavs(with: viewContext, id: itemId)
+                }
             }
         }
     }
