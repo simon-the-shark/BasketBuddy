@@ -29,7 +29,7 @@ struct ShoppingListsListView: View {
 
                             } else {
                                 Section {
-                                    ForEach($viewModel.shoppingLists) { $item in
+                                    ForEach($viewModel.shoppingLists.sorted { isFav(id: $0.id) && !isFav(id: $1.id) }) { $item in
                                         ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, isFavourite: isFav(id: item.id), viewModel: viewModel)
                                     }
                                 }
