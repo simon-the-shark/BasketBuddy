@@ -15,9 +15,7 @@ extension ShoppingListDetailView {
 
         @Published var shoppingListDetail: ShoppingListDetail? = nil
 
-        var isLoading: Bool {
-            return shoppingListDetail == nil
-        }
+        @Published var isLoading: Bool = true
 
         var items: [ShoppingListItem] {
             return shoppingListDetail?.items ?? []
@@ -49,6 +47,7 @@ extension ShoppingListDetailView {
                 let detailData = await repository.getById(id: id, with: with)
                 DispatchQueue.main.async {
                     self.shoppingListDetail = detailData
+                    self.isLoading = false
                 }
             }
         }
@@ -58,10 +57,13 @@ extension ShoppingListDetailView {
         }
 
         func addProduct(with: AuthService, prod: Product) {
+            isLoading = true
             Task {
                 let success = await repository.addProduct(with: with, listId: objectId, product: prod)
                 if success {
                     loadObject(with: with, id: objectId)
+                } else {
+                    self.isLoading = false
                 }
             }
         }
@@ -74,11 +76,14 @@ extension ShoppingListDetailView {
         }
 
         func changeIsBought(with: AuthService, item: ShoppingListItem, isBought: Bool) {
+            isLoading = true
             Task {
                 let template = ShoppingListItemTemplate(product_id: item.product.id, quantity: item.quantity, unit: item.unit, isBought: isBought)
                 let success = await repository.updateItem(with: with, listId: objectId, itemId: item.id, newItem: template)
                 if success {
                     self.loadObject(with: with, id: objectId)
+                } else {
+                    self.isLoading = false
                 }
             }
         }
@@ -89,6 +94,7 @@ extension ShoppingListDetailView {
             guard let item = shoppingListDetail else {
                 return
             }
+            isLoading = true
             parentViewModel.showEditListDialog(item: ShoppingList(id: item.id, name: item.name, color: item.color, emoji: item.emoji, isActive: item.isActive, owner: item.owner)) {
                 self.loadObject(with: with, id: self.objectId)
             }
@@ -98,10 +104,12 @@ extension ShoppingListDetailView {
             guard let curr = shoppingListDetail else {
                 return
             }
+            isLoading = true
             Task {
                 let newData = ShoppingList(id: curr.id, name: curr.name, color: curr.color, emoji: curr.emoji, isActive: true, owner: curr.owner)
                 let _ = await ShoppingListsRepository.shared.editList(with: with, item: newData)
                 DispatchQueue.main.async {
+                    self.isLoading = false
                     onDone()
                 }
             }

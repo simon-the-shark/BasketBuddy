@@ -12,7 +12,8 @@ extension HistoryView {
         override func fetchShoppingLists(with: AuthService) {
             Task {
                 let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
-                let historicalLists = newData.filter { !$0.isActive } // ! changed here
+                var historicalLists = newData.filter { !$0.isActive } // ! changed here
+                historicalLists.sort(by: { $0.id < $1.id })
                 DispatchQueue.main.async {
                     self.shoppingLists = historicalLists
                     self.isLoading = false

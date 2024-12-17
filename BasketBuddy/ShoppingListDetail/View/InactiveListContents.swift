@@ -13,14 +13,17 @@ struct InactiveListContents: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     var body: some View {
-        Section {
-            ForEach(viewModel.items, id: \.id) {
-                item in
-                ShoppingItemTile(item: item, viewModel: viewModel, disabled: true)
+        if !viewModel.items.isEmpty {
+            Section {
+                ForEach(viewModel.items, id: \.id) {
+                    item in
+                    ShoppingItemTile(item: item, viewModel: viewModel, disabled: true)
+                }
+            } header: {
+                Text("Zakupione")
             }
-        } header: {
-            Text("Zakupione")
         }
+
         if !viewModel.isLoading {
             HStack {
                 Spacer()

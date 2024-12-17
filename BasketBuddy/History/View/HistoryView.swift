@@ -13,29 +13,31 @@ struct HistoryView: View {
 
     var body: some View {
         NavigationView {
-            EditNameDialog(viewModel: viewModel) {
-                List {
-                    if viewModel.shoppingLists.isEmpty {
-                        NoListsInfo()
-                    } else {
-                        Section {
-                            ForEach($viewModel.shoppingLists, id: \.id) { $item in
-                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, isFavourite: false, viewModel: viewModel)
+            LoadingOverlay(isLoading: viewModel.isLoading) {
+                EditNameDialog(viewModel: viewModel) {
+                    List {
+                        if viewModel.shoppingLists.isEmpty && !viewModel.isLoading {
+                            NoListsInfo()
+                        } else if !viewModel.shoppingLists.isEmpty {
+                            Section {
+                                ForEach($viewModel.shoppingLists, id: \.id) { $item in
+                                    ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, isFavourite: false, viewModel: viewModel)
+                                }
+                            }
+                            header: {
+                                Text("Historyczne listy zakupów").padding(.top, 0)
                             }
                         }
-                        header: {
-                            Text("Historyczne listy zakupów").padding(.top, 0)
-                        }
                     }
+                    .scrollContentBackground(.hidden)
+                    .background(Color("GrayBackground"))
                 }
-                .scrollContentBackground(.hidden)
-                .background(Color("GrayBackground"))
-            }
 
-            .onAppear {
-                viewModel.fetchShoppingLists(with: authService)
+                .onAppear {
+                    viewModel.fetchShoppingLists(with: authService)
+                }
+                .navigationTitle("Historia Zakupów")
             }
-            .navigationTitle("Historia Zakupów")
         }
     }
 }

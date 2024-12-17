@@ -31,16 +31,16 @@ struct ShoppingListDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.changeListName(
-                        with: authService
-                    )
+                    viewModel.changeListName(with: authService)
                 } label: {
                     Label("Edytuj nazwę listy", systemImage: "pencil")
                 }.controlSize(.extraLarge)
             }
             if isListActive {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {} label: {
+                    Button {
+                        viewModel.showProductSheet()
+                    } label: {
                         Label("Dodaj produkt do listy", systemImage: "plus.app")
                     }.controlSize(.extraLarge)
                 }

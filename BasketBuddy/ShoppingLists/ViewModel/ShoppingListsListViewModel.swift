@@ -23,7 +23,8 @@ extension ShoppingListsListView {
         func fetchShoppingLists(with: AuthService) {
             Task {
                 let newData = await ShoppingListsRepository.shared.fetchShoppingLists(with: with)
-                let activeLists = newData.filter { $0.isActive }
+                var activeLists = newData.filter { $0.isActive }
+                activeLists.sort(by: { $0.id < $1.id })
                 DispatchQueue.main.async {
                     self.shoppingLists = activeLists
                     self.isLoading = false
@@ -32,20 +33,30 @@ extension ShoppingListsListView {
         }
 
         func removeShoppingList(item: ShoppingList, with: AuthService) {
+            isLoading = true
             Task {
                 let success = await ShoppingListsRepository.shared.removeList(with: with, item: item)
                 if success {
                     fetchShoppingLists(with: with)
+                } else {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                    }
                 }
             }
         }
 
         func deactivateShoppingList(item: ShoppingList, with: AuthService) {
+            isLoading = true
             Task {
                 let newItem = ShoppingList(id: item.id, name: item.name, color: item.color, emoji: item.emoji, isActive: false, owner: item.owner)
                 let success = await ShoppingListsRepository.shared.editList(with: with, item: newItem)
                 if success {
                     fetchShoppingLists(with: with)
+                } else {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                    }
                 }
             }
         }
@@ -54,10 +65,12 @@ extension ShoppingListsListView {
             isPresented = false
             listUnderEditing = nil
             dialogInputText = ""
+            isLoading = false
         }
 
         func saveDialog(with: AuthService) {
             isPresented = false
+            isLoading = true
             if isDialogInEditingMode {
                 var item = listUnderEditing!
                 item.name = dialogInputText

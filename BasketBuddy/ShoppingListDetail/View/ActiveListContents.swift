@@ -27,14 +27,16 @@ struct ActiveListContents: View {
     @ObservedObject var viewModel: ShoppingListDetailView.ViewModel
     var body: some View {
         GroupedByCategoryList(viewModel: viewModel)
-        HStack {
-            Spacer()
-            Button {
-                viewModel.showProductSheet()
-            } label: {
-                Text("Dodaj produkt")
+        if !viewModel.isLoading {
+            HStack {
+                Spacer()
+                Button {
+                    viewModel.showProductSheet()
+                } label: {
+                    Text("Dodaj produkt")
+                }
+                Spacer()
             }
-            Spacer()
         }
 
         if !viewModel.boughtItems.isEmpty {
