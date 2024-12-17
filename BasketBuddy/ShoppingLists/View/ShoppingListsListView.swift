@@ -13,42 +13,45 @@ struct ShoppingListsListView: View {
 
     var body: some View {
         NavigationView {
-            LogoAppBar {
+            LoadingOverlay(isLoading: viewModel.isLoading) {
                 EditNameDialog(viewModel: viewModel) {
-                    List {
-                        Section {
-                            ForEach($viewModel.shoppingLists) { $item in
-                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel)
+                    VStack {
+                        List {
+                            if viewModel.shoppingLists.isEmpty && !viewModel.isLoading {
+                                NoListsInfo()
+
+                            } else {
+                                Section {
+                                    ForEach($viewModel.shoppingLists) { $item in
+                                        ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.active, viewModel: viewModel)
+                                    }
+                                }
+                                header: {
+                                    Text("Aktywne listy zakupów").padding(.top, 0)
+                                }
                             }
+
+                            AddListButton(viewModel: viewModel)
                         }
-                        header: {
-                            Text("Aktywne listy zakupów").padding(.top, 0)
-                        }
-                        HStack {
-                            Spacer()
+
+                        .scrollContentBackground(.hidden)
+                        .background(Color("GrayBackground"))
+
+                    }.toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
                             Button {
                                 viewModel.showAddListDialog()
                             } label: {
-                                Text("Dodaj listę")
-                            }
-                            Spacer()
+                                Label("Dodaj listę", systemImage: "plus.app")
+                            }.controlSize(.extraLarge).padding(.top, 20)
                         }
                     }
-                    .scrollContentBackground(.hidden)
-                    .background(Color("GrayBackground"))
+                    .onAppear {
+                        viewModel.fetchShoppingLists(with: authService)
+                    }
+                    .navigationTitle("BasketBuddy")
                 }
-            } action: {
-                viewModel.showAddListDialog()
             }
-
-            .onAppear {
-                viewModel.fetchShoppingLists(with: authService)
-            }
-            .navigationTitle("BasketBuddy")
         }
     }
-}
-
-#Preview {
-    ShoppingListsListView().environmentObject(AuthService())
 }

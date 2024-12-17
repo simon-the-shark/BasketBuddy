@@ -18,43 +18,53 @@ struct ProductsView: View {
     }
 
     var body: some View {
-        List {
-            Text("Dodaj produkt do listy")
-                .font(.headline)
-                .padding()
-
-            ForEach(Array(viewModel.groupProductsByCategory.keys)) { category in
-                Section(header: Text(category.name)) {
-                    ForEach(viewModel.groupProductsByCategory[category] ?? []) {
-                        product in
-                        Button {
-                            action(product)
-                            presentationMode.wrappedValue.dismiss()
-                        } label: {
-                            HStack {
-                                CategoryIcon(category: product.category, isEnabled: true)
-                                    .padding(.trailing)
-                                Text(product.name)
-                                    .font(.subheadline)
-                                    .foregroundColor(.primary)
+        VStack {
+            if viewModel.products.isEmpty {
+                ProgressView("Loading ...")
+            } else {
+                RoundedRectangle(cornerRadius: 3.0)
+                    .frame(width: 60, height: 6)
+                    .foregroundColor(Color.gray.opacity(0.5))
+                    .padding(.top, 8)
+                Text("Dodaj produkt do listy")
+                    .font(.headline)
+                    .padding()
+                List {
+                    ForEach(Array(viewModel.groupProductsByCategory.keys)) { category in
+                        Section(header: Text(category.name)) {
+                            ForEach(viewModel.groupProductsByCategory[category] ?? []) {
+                                product in
+                                Button {
+                                    action(product)
+                                    presentationMode.wrappedValue.dismiss()
+                                } label: {
+                                    HStack {
+                                        CategoryIcon(category: product.category, isEnabled: true)
+                                            .padding(.trailing)
+                                        Text(product.name)
+                                            .font(.subheadline)
+                                            .foregroundColor(.primary)
+                                    }
+                                }
                             }
                         }
                     }
+
+                    Button(action: {
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text("Close")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.red)
+                            .cornerRadius(10)
+                    }
+                    .padding()
                 }
             }
-
-            Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Text("Close")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(10)
-            }
-            .padding()
-        }.onAppear {
+        }
+        .onAppear {
             viewModel.loadProducts(with: authService)
         }
     }

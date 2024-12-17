@@ -14,30 +14,25 @@ struct ShoppingListDetailView: View {
     var isListActive: Bool
 
     var body: some View {
-        HStack {
-            if viewModel.isLoading {
-                ProgressView("Loading...")
-            } else {
-                List {
-                    if isListActive {
-                        ActiveListContents(viewModel: viewModel)
-                    } else {
-                        InactiveListContents(viewModel: viewModel)
-                    }
+        LoadingOverlay(isLoading: viewModel.isLoading) {
+            List {
+                if isListActive {
+                    ActiveListContents(viewModel: viewModel)
+                } else {
+                    InactiveListContents(viewModel: viewModel)
                 }
             }
-        }
-        .navigationTitle(viewModel.shoppingListDetail?.name ?? "")
-        .toolbarTitleDisplayMode(.large)
-        .scrollContentBackground(.hidden)
-        .background(Color("GrayBackground"))
-        .onAppear {
+        }.onAppear {
             viewModel.loadObject(with: authService, id: objectId)
-        }.sheet(isPresented: $viewModel.isSheetShown) {
-            ProductsView { product in
-                viewModel.addProduct(with: authService, prod: product)
+        }.navigationTitle(viewModel.shoppingListDetail?.name ?? "")
+            .toolbarTitleDisplayMode(.large)
+            .scrollContentBackground(.hidden)
+            .background(Color("GrayBackground"))
+            .sheet(isPresented: $viewModel.isSheetShown) {
+                ProductsView { product in
+                    viewModel.addProduct(with: authService, prod: product)
+                }
             }
-        }
     }
 }
 

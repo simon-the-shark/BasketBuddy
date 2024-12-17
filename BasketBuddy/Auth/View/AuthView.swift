@@ -13,66 +13,68 @@ struct AuthView: View {
     @EnvironmentObject private var authService: AuthService
 
     var body: some View {
-        VStack {
-            TextField("Email", text: $viewModel.email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            SecureField("Password", text: $viewModel.password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-
-            if !viewModel.isLoggingIn {
-                SecureField("Password Repeat", text: $viewModel.passwordRepeat)
+        LoadingOverlay(isLoading: viewModel.isLoading) {
+            VStack {
+                TextField("Email", text: $viewModel.email)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-            }
 
-            if viewModel.isLoggingIn {
-                Button(action: {
-                    Task {
-                        await viewModel.login(with: authService)
-                    }
-                }) {
-                    Text("Login")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding()
-            }
-
-            else {
-                Button(action: {
-                    Task {
-                        await viewModel.signup(with: authService)
-                    }
-                }) {
-                    Text("Signup")
-                        .padding()
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding()
-            }
-
-            Button(action: {
-                viewModel.toggleIsLogginIn()
-            }) {
-                Text(viewModel.isLoggingIn ?
-                    "Nie masz konta? Zarejestruj się" : "Masz już konto? Zaloguj się")
+                SecureField("Password", text: $viewModel.password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-            }
 
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
+                if !viewModel.isLoggingIn {
+                    SecureField("Password Repeat", text: $viewModel.passwordRepeat)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                }
+
+                if viewModel.isLoggingIn {
+                    Button(action: {
+                        Task {
+                            await viewModel.login(with: authService)
+                        }
+                    }) {
+                        Text("Login")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
                     .padding()
+                }
+
+                else {
+                    Button(action: {
+                        Task {
+                            await viewModel.signup(with: authService)
+                        }
+                    }) {
+                        Text("Signup")
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding()
+                }
+
+                Button(action: {
+                    viewModel.toggleIsLogginIn()
+                }) {
+                    Text(viewModel.isLoggingIn ?
+                        "Nie masz konta? Zarejestruj się" : "Masz już konto? Zaloguj się")
+                        .padding()
+                }
+
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
             }
+            .padding()
         }
-        .padding()
     }
 }
 

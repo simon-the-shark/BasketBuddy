@@ -16,23 +16,40 @@ extension AuthView {
         @Published var password = ""
         @Published var passwordRepeat = ""
         @Published var isLoggingIn = true
+        @Published var isLoading = false
 
         func login(with: AuthService) async {
-            do {
-                try await with.login(email: email, password: password)
-            } catch {
+            Task {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Login failed: \(error.localizedDescription)"
+                    self.isLoading = true
+                }
+                do {
+                    try await with.login(email: email, password: password)
+                } catch {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Login failed: \(error.localizedDescription)"
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
             }
         }
 
         func signup(with: AuthService) async {
-            do {
-                try await with.signup(email: email, password: password)
-            } catch {
+            Task {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Signup failed: \(error.localizedDescription)"
+                    self.isLoading = true
+                }
+                do {
+                    try await with.signup(email: email, password: password)
+                } catch {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Signup failed: \(error.localizedDescription)"
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.isLoading = false
                 }
             }
         }

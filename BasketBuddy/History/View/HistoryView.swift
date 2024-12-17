@@ -15,13 +15,17 @@ struct HistoryView: View {
         NavigationView {
             EditNameDialog(viewModel: viewModel) {
                 List {
-                    Section {
-                        ForEach($viewModel.shoppingLists) { $item in
-                            ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, viewModel: viewModel)
+                    if viewModel.shoppingLists.isEmpty {
+                        NoListsInfo()
+                    } else {
+                        Section {
+                            ForEach($viewModel.shoppingLists) { $item in
+                                ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, viewModel: viewModel)
+                            }
                         }
-                    }
-                    header: {
-                        Text("Historyczne listy zakupów").padding(.top, 0)
+                        header: {
+                            Text("Historyczne listy zakupów").padding(.top, 0)
+                        }
                     }
                 }
                 .scrollContentBackground(.hidden)

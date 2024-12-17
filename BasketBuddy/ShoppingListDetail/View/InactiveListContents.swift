@@ -21,16 +21,18 @@ struct InactiveListContents: View {
         } header: {
             Text("Zakupione")
         }
-        HStack {
-            Spacer()
-            Button {
-                viewModel.activateThisListAgain(with: authService) {
-                    self.presentationMode.wrappedValue.dismiss()
+        if !viewModel.isLoading {
+            HStack {
+                Spacer()
+                Button {
+                    viewModel.activateThisListAgain(with: authService) {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                } label: {
+                    Text("Ponownie wykorzystaj tą listę")
                 }
-            } label: {
-                Text("Ponownie wykorzystaj tą listę")
+                Spacer()
             }
-            Spacer()
         }
     }
 }
