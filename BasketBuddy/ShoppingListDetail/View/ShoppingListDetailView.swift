@@ -38,10 +38,12 @@ struct ShoppingListDetailView: View {
                     Label("Edytuj nazwę listy", systemImage: "pencil")
                 }.controlSize(.extraLarge)
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {} label: {
-                    Label("Dodaj produkt do listy", systemImage: "plus.app")
-                }.controlSize(.extraLarge)
+            if isListActive {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {} label: {
+                        Label("Dodaj produkt do listy", systemImage: "plus.app")
+                    }.controlSize(.extraLarge)
+                }
             }
         }
 

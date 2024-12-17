@@ -30,7 +30,7 @@ struct ProductsView: View {
                     .font(.headline)
                     .padding()
                 List {
-                    ForEach(Array(viewModel.groupProductsByCategory.keys), id:\.id) { category in
+                    ForEach(Array(viewModel.groupProductsByCategory.keys), id: \.id) { category in
                         Section(header: Text(category.name)) {
                             ForEach(viewModel.groupProductsByCategory[category] ?? []) {
                                 product in
