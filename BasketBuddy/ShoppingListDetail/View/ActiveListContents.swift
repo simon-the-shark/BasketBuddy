@@ -12,9 +12,9 @@ struct GroupedByCategoryList: View {
     var body: some View {
         ForEach(Array(viewModel.itemsGroupedByCategory.keys.sorted(by: { a, b in
             a.id > b.id
-        }))) { category in
+        })), id: \.id) { category in
             Section(header: Text(category.name)) {
-                ForEach(viewModel.itemsGroupedByCategory[category] ?? []) {
+                ForEach(viewModel.itemsGroupedByCategory[category] ?? [], id: \.id) {
                     item in
                     ShoppingItemTile(item: item, viewModel: viewModel)
                 }
@@ -39,7 +39,7 @@ struct ActiveListContents: View {
 
         if !viewModel.boughtItems.isEmpty {
             Section {
-                ForEach(viewModel.boughtItems) {
+                ForEach(viewModel.boughtItems, id: \.id) {
                     item in
                     ShoppingItemTile(item: item, viewModel: viewModel)
                 }

@@ -19,7 +19,7 @@ struct HistoryView: View {
                         NoListsInfo()
                     } else {
                         Section {
-                            ForEach($viewModel.shoppingLists) { $item in
+                            ForEach($viewModel.shoppingLists, id: \.id) { $item in
                                 ShoppingListTile(item: item, mode: ShoppingListTile.TileMode.historical, isFavourite: false, viewModel: viewModel)
                             }
                         }

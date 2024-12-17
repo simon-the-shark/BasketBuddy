@@ -14,7 +14,7 @@ struct InactiveListContents: View {
 
     var body: some View {
         Section {
-            ForEach(viewModel.items) {
+            ForEach(viewModel.items, id: \.id) {
                 item in
                 ShoppingItemTile(item: item, viewModel: viewModel, disabled: true)
             }
