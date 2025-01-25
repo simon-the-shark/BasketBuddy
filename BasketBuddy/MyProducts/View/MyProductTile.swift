@@ -9,9 +9,10 @@ import SwiftUI
 
 struct MyProductTile: View {
     var product: MyProduct
+    var categories: [Product.Category]
     var body: some View {
         NavigationLink {
-            
+            MyProductsFormView(product: product, categories: categories)
         } label: {
             if(product.image == nil){
                 CategoryIcon(category: product.category, isEnabled: true)

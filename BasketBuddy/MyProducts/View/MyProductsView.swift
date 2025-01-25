@@ -17,9 +17,18 @@ struct MyProductsView: View {
                 ForEach(Array(viewModel.groupProductsByCategory.keys), id: \.self) { category in
                     let products = viewModel.groupProductsByCategory[category] ?? []
                     Section(header: Text(category.name)) {
-                        ForEach(products, id: \.self) { product in MyProductTile(product: product) }
+                        ForEach(products, id: \.self) { product in MyProductTile(product: product, categories: viewModel.categories) }
                     }
                 }
+                NavigationLink {
+                    MyProductsFormView(categories: viewModel.categories)
+                } label: {
+                HStack {
+                    Spacer()
+                     Text("Dodaj nowy produkt")
+                    Spacer()
+                }
+                }.buttonStyle(PlainButtonStyle()) 
             }.navigationBarTitle("My Products")
                 .navigationBarItems(trailing: Button(action: {
                     viewModel.logout(with: authService)

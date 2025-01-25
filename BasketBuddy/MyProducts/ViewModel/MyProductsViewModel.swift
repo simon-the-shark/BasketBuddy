@@ -20,7 +20,9 @@ extension MyProductsView {
     class ViewModel: ObservableObject {
         
         private let repository = MyProductsRepository.shared
+        private let categoriesRepo = CategoriesRepository.shared
         @Published var products: [MyProduct] = []
+        @Published var categories: [Product.Category] = []
 
         var groupProductsByCategory: [Product.Category: [MyProduct]] {
             return Dictionary(grouping: products, by: { $0.category })
@@ -29,8 +31,10 @@ extension MyProductsView {
         func loadProducts(with: AuthService) {
             Task {
                 let products = await repository.getAll(with: with)
+                let categories = await categoriesRepo.getAll(with: with)
                 DispatchQueue.main.async {
                     self.products = products
+                    self.categories = categories
                 }
             }
         }
