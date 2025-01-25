@@ -13,14 +13,22 @@ struct MyProductsView: View {
 
     var body: some View {
         NavigationView {
-            List {}
-                .navigationBarTitle("My Products")
+            List {
+                ForEach(Array(viewModel.groupProductsByCategory.keys), id: \.self) { category in
+                    let products = viewModel.groupProductsByCategory[category] ?? []
+                    Section(header: Text(category.name)) {
+                        ForEach(products, id: \.self) { product in MyProductTile(product: product) }
+                    }
+                }
+            }.navigationBarTitle("My Products")
                 .navigationBarItems(trailing: Button(action: {
                     viewModel.logout(with: authService)
                 }) {
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                     Text("Log Out")
                 })
+        }.onAppear {
+            viewModel.loadProducts(with: authService)
         }
     }
 }
