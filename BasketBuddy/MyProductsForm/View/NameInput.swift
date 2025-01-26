@@ -10,16 +10,16 @@ import SwiftUI
 struct NameInput: View {
     @ObservedObject var viewModel: MyProductsFormView.ViewModel
     @State private var productName: String
-    init(viewModel: MyProductsFormView.ViewModel){
-        self.productName = viewModel.productName 
+    init(viewModel: MyProductsFormView.ViewModel) {
+        productName = viewModel.productName
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         HStack {
             Text("Nazwa").padding(.trailing)
             TextField("Nazwa", text: $productName)
-        }.onChange(of: productName) { oldValue, newValue in
+        }.onChange(of: productName) { _, _ in
             viewModel.productName = productName
         }
     }

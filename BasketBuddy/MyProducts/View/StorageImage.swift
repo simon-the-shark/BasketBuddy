@@ -15,7 +15,7 @@ struct StorageImage: View {
     @StateObject private var viewModel: ViewModel = .init()
     var body: some View {
         if image == nil || image == "" {
-            CategoryIcon(category: category, isEnabled: true)
+            CategoryIcon(category: category, isEnabled: true, frameDimension: imageDimensionSize)
                 .padding(.trailing)
         } else {
             if let loadedImageData = viewModel.loadedImageData {

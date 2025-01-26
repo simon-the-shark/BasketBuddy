@@ -39,7 +39,7 @@ struct ProductsView: View {
                                     presentationMode.wrappedValue.dismiss()
                                 } label: {
                                     HStack {
-                                        CategoryIcon(category: product.category, isEnabled: true)
+                                        CategoryIcon(category: product.category, isEnabled: true, frameDimension: 50)
                                             .padding(.trailing)
                                         Text(product.name)
                                             .font(.subheadline)

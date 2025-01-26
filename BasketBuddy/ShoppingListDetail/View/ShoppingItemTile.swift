@@ -28,7 +28,7 @@ struct ShoppingItemTile: View {
                         .font(.system(size: 20)).padding(.trailing)
                 }
             }
-            CategoryIcon(category: item.product.category, isEnabled: !item.isBought && !disabled)
+            CategoryIcon(category: item.product.category, isEnabled: !item.isBought && !disabled, frameDimension: 50)
                 .padding(.trailing)
             VStack(alignment: .leading) {
                 Text(item.product.name)
