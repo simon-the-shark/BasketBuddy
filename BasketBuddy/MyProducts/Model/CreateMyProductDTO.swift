@@ -1,5 +1,5 @@
 //
-//  MyProduct.swift
+//  CreateMyProductDTO.swift
 //  BasketBuddy
 //
 //  Created by Szymon Kowaliński on 17/12/2024.

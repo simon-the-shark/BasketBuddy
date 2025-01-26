@@ -7,14 +7,13 @@
 
 import Foundation
 
-
 class MyProductsRepository {
-    private init (){}
+    private init() {}
     public static let shared = MyProductsRepository()
     private var cachedProducts: [MyProduct] = []
 
     func getAll(with: AuthService) async -> [MyProduct] {
-        if (!cachedProducts.isEmpty){
+        if !cachedProducts.isEmpty {
             return cachedProducts
         }
         guard let token = with.authState.data?.token else {
@@ -24,7 +23,7 @@ class MyProductsRepository {
             let (data, _) = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/custom-products/", headers: [
                 "Authorization": "Token \(token)",
             ])
-            print(data);
+            print(data)
             let dataParsed = try JSONDecoder().decode([MyProduct].self, from: data)
             cachedProducts = dataParsed
             return dataParsed
@@ -55,7 +54,7 @@ class MyProductsRepository {
         }
     }
 
-    func updateProduct(_ product: CreateMyProductDTO, productId: Int,  with: AuthService, imageData: Data?) async -> Bool {
+    func updateProduct(_ product: CreateMyProductDTO, productId: Int, with: AuthService, imageData: Data?) async -> Bool {
         guard let token = with.authState.data?.token else {
             return false
         }

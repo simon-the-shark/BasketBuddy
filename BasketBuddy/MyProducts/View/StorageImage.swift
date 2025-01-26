@@ -11,10 +11,10 @@ struct StorageImage: View {
     var image: String?
     var category: Product.Category
     var imageDimensionSize: CGFloat?
-    
+
     @StateObject private var viewModel: ViewModel = .init()
     var body: some View {
-        if(image == nil || image == ""){
+        if image == nil || image == "" {
             CategoryIcon(category: category, isEnabled: true)
                 .padding(.trailing)
         } else {
@@ -23,22 +23,18 @@ struct StorageImage: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .frame(maxWidth: imageDimensionSize, maxHeight: imageDimensionSize == nil ? 200 : imageDimensionSize)
-                        .padding(.trailing)
+                        .padding(.trailing, imageDimensionSize != nil ? 10 : 0)
                 }
             } else {
                 ProgressView()
                     .frame(maxWidth: imageDimensionSize, maxHeight: imageDimensionSize == nil ? 200 : imageDimensionSize)
-                    .padding(.trailing)
+                    .padding(.trailing, imageDimensionSize != nil ? 10 : 0)
                     .onAppear {
-                    Task{
-                        try await viewModel.loadImage(imagePath: image!)
-
-                    }                }
-            }
-           
-            
-
+                        Task {
+                            try await viewModel.loadImage(imagePath: image!)
                         }
+                    }
+            }
+        }
     }
 }
-

@@ -1,31 +1,30 @@
 //
-//  MyProductsDetailView.swift
+//  MyProductsFormView.swift
 //  BasketBuddy
 //
 //  Created by Szymon Kowaliński on 25/01/2025.
 //
 
-import SwiftUI
 import PhotosUI
+import SwiftUI
 
 struct MyProductsFormView: View {
     @ObservedObject var viewModel: ViewModel
     @EnvironmentObject private var authService: AuthService
     @Environment(\.dismiss) var dismiss
 
-    
     init(product: MyProduct, categories: [Product.Category], onDisappear: @escaping () -> Void = {}) {
-        self.viewModel = ViewModel(categories: categories, initialData: product)
+        viewModel = ViewModel(categories: categories, initialData: product)
         self.onDisappear = onDisappear
     }
-    
+
     init(categories: [Product.Category], onDisappear: @escaping () -> Void = {}) {
-        self.viewModel = ViewModel(categories: categories, initialData: nil)
+        viewModel = ViewModel(categories: categories, initialData: nil)
         self.onDisappear = onDisappear
     }
-    
+
     private var onDisappear: () -> Void
-    
+
     var body: some View {
         List {
             Section(header: Text("Dane Produktu")) {
@@ -41,15 +40,12 @@ struct MyProductsFormView: View {
                 Toggle(isOn: $viewModel.haveCustomImage) {
                     Text("Wybierz swój obraz")
                 }
- 
-                               
-                
             }
             Section(header: Text("Obraz/Ikona")) {
-                if(viewModel.imagePreviewData == nil){
+                if viewModel.imagePreviewData == nil {
                     StorageImage(image: viewModel.product.image, category: viewModel.selectedCategory)
                 }
-                if (viewModel.imagePreviewData != nil){
+                if viewModel.imagePreviewData != nil {
                     if let uiImage = UIImage(data: viewModel.imagePreviewData!) {
                         Image(uiImage: uiImage)
                             .resizable()
@@ -60,20 +56,20 @@ struct MyProductsFormView: View {
                 HStack {
                     Text("Możesz tez wybrać obraz")
                     Spacer()
-                    if(viewModel.haveCustomImage){
-                        PhotosPicker("Zmień", selection:  $viewModel.imageItem, matching: .images)
+                    if viewModel.haveCustomImage {
+                        PhotosPicker("Zmień", selection: $viewModel.imageItem, matching: .images)
                     }
                 }
             }
-            
+
             HStack {
                 Spacer()
                 Button {
                     Task {
-                     await viewModel.saveProduct(with: authService)
+                        await viewModel.saveProduct(with: authService)
                         dismiss()
                     }
-                   
+
                 } label: {
                     Text("Zapisz")
                 }
@@ -81,9 +77,8 @@ struct MyProductsFormView: View {
             }
         }
         .navigationBarTitle("Dodaj swój product")
-         .onDisappear {
+        .onDisappear {
             onDisappear()
         }
     }
 }
-

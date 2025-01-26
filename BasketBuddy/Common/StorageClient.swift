@@ -1,13 +1,12 @@
-import Foundation
-import AWSS3
-import Smithy
-import ClientRuntime
 import AwsCommonRuntimeKit
+import AWSS3
+import ClientRuntime
+import Foundation
+import Smithy
 import SmithyIdentity
 
 /// A class containing all the code that interacts with the AWS SDK for Swift.
 public class StorageClient {
-    
     let client: S3Client
 
     enum HandlerError: Error {
@@ -23,9 +22,9 @@ public class StorageClient {
     ///            execute AWS operations.
     public init() async throws {
         do {
-            let MINIO_STORAGE_ENDPOINT=EnvironmentValue.get("MINIO_STORAGE_ENDPOINT")!
-            let MINIO_STORAGE_ACCESS_KEY=EnvironmentValue.get("MINIO_STORAGE_ACCESS_KEY")!
-            let MINIO_STORAGE_SECRET_KEY=EnvironmentValue.get("MINIO_STORAGE_SECRET_KEY")!
+            let MINIO_STORAGE_ENDPOINT = EnvironmentValue.get("MINIO_STORAGE_ENDPOINT")!
+            let MINIO_STORAGE_ACCESS_KEY = EnvironmentValue.get("MINIO_STORAGE_ACCESS_KEY")!
+            let MINIO_STORAGE_SECRET_KEY = EnvironmentValue.get("MINIO_STORAGE_SECRET_KEY")!
             let credentialsResolver = try StaticAWSCredentialIdentityResolver(
                 AWSCredentialIdentity(accessKey: MINIO_STORAGE_ACCESS_KEY, secret: MINIO_STORAGE_SECRET_KEY)
             )
@@ -36,14 +35,12 @@ public class StorageClient {
                 endpoint: MINIO_STORAGE_ENDPOINT
             )
             client = S3Client(config: config)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Initializing S3 client"))
             throw error
         }
     }
 
-    
     /// Create a new user given the specified name.
     ///
     /// - Parameters:
@@ -59,12 +56,10 @@ public class StorageClient {
         input.createBucketConfiguration = S3ClientTypes.CreateBucketConfiguration()
         do {
             _ = try await client.createBucket(input: input)
-        }
-        catch let error as BucketAlreadyOwnedByYou {
+        } catch let error as BucketAlreadyOwnedByYou {
             print("The bucket '\(name)' already exists and is owned by you. You may wish to ignore this exception.")
             throw error
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Creating a bucket"))
             throw error
         }
@@ -88,8 +83,7 @@ public class StorageClient {
             )
 
             _ = try await client.putObject(input: input)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Putting an object."))
             throw error
         }
@@ -113,8 +107,7 @@ public class StorageClient {
 
         do {
             _ = try await client.putObject(input: input)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Putting an object."))
             throw error
         }
@@ -146,8 +139,7 @@ public class StorageClient {
             }
 
             try data.write(to: fileUrl)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Downloading a file."))
             throw error
         }
@@ -168,7 +160,7 @@ public class StorageClient {
         )
         do {
             let output = try await client.getObject(input: input)
-            
+
             guard let body = output.body else {
                 throw HandlerError.getObjectBody("GetObjectInput missing body.")
             }
@@ -178,13 +170,11 @@ public class StorageClient {
             }
 
             return data
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Reading a file."))
             throw error
         }
-   }
-
+    }
 
     /// Copy a file from one bucket to another.
     ///
@@ -193,7 +183,7 @@ public class StorageClient {
     ///   - name: Name of the source file.
     ///   - destBucket: Name of the bucket to copy the file into.
     public func copyFile(from sourceBucket: String, name: String, to destBucket: String) async throws {
-        let srcUrl = ("\(sourceBucket)/\(name)").addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+        let srcUrl = "\(sourceBucket)/\(name)".addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
 
         let input = CopyObjectInput(
             bucket: destBucket,
@@ -202,8 +192,7 @@ public class StorageClient {
         )
         do {
             _ = try await client.copyObject(input: input)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Copying an object."))
             throw error
         }
@@ -223,8 +212,7 @@ public class StorageClient {
 
         do {
             _ = try await client.deleteObject(input: input)
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Deleting a file."))
             throw error
         }
@@ -241,32 +229,29 @@ public class StorageClient {
             let input = ListObjectsV2Input(
                 bucket: bucket
             )
-            
+
             // Use "Paginated" to get all the objects.
             // This lets the SDK handle the 'continuationToken' in "ListObjectsV2Output".
             let output = client.listObjectsV2Paginated(input: input)
             var names: [String] = []
-            
+
             for try await page in output {
                 guard let objList = page.contents else {
                     print("ERROR: listObjectsV2Paginated returned nil contents.")
                     continue
                 }
-                
+
                 for obj in objList {
                     if let objName = obj.key {
                         names.append(objName)
                     }
                 }
             }
-            
-            
+
             return names
-        }
-        catch {
+        } catch {
             print("ERROR: ", dump(error, name: "Listing objects."))
             throw error
         }
     }
 }
-

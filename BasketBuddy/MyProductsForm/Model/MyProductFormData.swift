@@ -15,8 +15,8 @@ struct MyProductFormData: Codable {
 
 extension MyProductFormData {
     init(from product: MyProduct) {
-        self.category = product.category
-        self.image = product.image
-        self.name = product.name
+        category = product.category
+        image = product.image
+        name = product.name
     }
 }

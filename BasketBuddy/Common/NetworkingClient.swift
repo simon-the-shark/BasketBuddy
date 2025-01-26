@@ -13,7 +13,7 @@ class EnvironmentValue {
 }
 
 class NetworkingClient {
-     static func getApiURL() -> URL {
+    static func getApiURL() -> URL {
         guard let apiUrlString = EnvironmentValue.get("API_URL"), let apiUrl = URL(string: apiUrlString) else {
             fatalError("Failed to initialize NetworkingClient: API_URL not set or invalid in environment")
         }

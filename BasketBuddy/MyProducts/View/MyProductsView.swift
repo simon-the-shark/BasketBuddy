@@ -17,7 +17,7 @@ struct MyProductsView: View {
                 ForEach(Array(viewModel.groupProductsByCategory.keys), id: \.self) { category in
                     let products = viewModel.groupProductsByCategory[category] ?? []
                     Section(header: Text(category.name)) {
-                        ForEach(products, id: \.self) { product in  NavigationLink {
+                        ForEach(products, id: \.self) { product in NavigationLink {
                             MyProductsFormView(product: product, categories: viewModel.categories) {
                                 viewModel.loadProducts(with: authService)
                             }
@@ -27,10 +27,10 @@ struct MyProductsView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.primary)
                         }
- }
+                        }
                     }
                 }
-                NavigationLink{
+                NavigationLink {
                     MyProductsFormView(categories: viewModel.categories) {
                         viewModel.loadProducts(with: authService)
                     }

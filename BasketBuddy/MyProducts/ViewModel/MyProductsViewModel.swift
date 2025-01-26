@@ -18,7 +18,6 @@ import Foundation
 
 extension MyProductsView {
     class ViewModel: ObservableObject {
-        
         private let repository = MyProductsRepository.shared
         private let categoriesRepo = CategoriesRepository.shared
         @Published var products: [MyProduct] = []
@@ -38,7 +37,7 @@ extension MyProductsView {
                 }
             }
         }
-        
+
         func logout(with: AuthService) {
             do {
                 try with.logout()
@@ -47,8 +46,5 @@ extension MyProductsView {
                 print(error)
             }
         }
-        
-        
-        
     }
 }
