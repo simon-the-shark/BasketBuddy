@@ -24,7 +24,7 @@ extension MyProductsView {
         @Published var categories: [Product.Category] = []
 
         var groupProductsByCategory: [Product.Category: [MyProduct]] {
-            return Dictionary(grouping: products, by: { $0.category })
+            return Dictionary(grouping: products, by: { $0.category }).mapValues { $0.sorted(by: { $0.id < $1.id }) }
         }
 
         func loadProducts(with: AuthService) {
@@ -32,8 +32,8 @@ extension MyProductsView {
                 let products = await repository.getAll(with: with)
                 let categories = await categoriesRepo.getAll(with: with)
                 DispatchQueue.main.async {
-                    self.products = products
-                    self.categories = categories
+                    self.products = products.sorted(by: { $0.id < $1.id })
+                    self.categories = categories.sorted(by: { $0.id < $1.id })
                 }
             }
         }

@@ -43,7 +43,9 @@ class NetworkingClient {
         if let body = body {
             request.httpBody = body
         }
-
+        if let body = body, let bodyString = String(data: body, encoding: .utf8) {
+            print("Request body: \(bodyString)")
+        }
         let (data, response) = try await URLSession.shared.data(for: request)
 
         return (data, response)

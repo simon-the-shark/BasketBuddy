@@ -12,7 +12,7 @@ import SwiftUI
 extension MyProductsFormView {
     class ViewModel: ObservableObject {
         private let myProductsRepository = MyProductsRepository.shared
-
+        private var imageWasChanged = false
         @Published var product: MyProductFormData
 
         var productName: String {
@@ -32,6 +32,7 @@ extension MyProductsFormView {
                 product = MyProductFormData(category: product.category, image: nil, name: product.name)
                 imagePreviewData = nil
                 imageItem = nil
+                imageWasChanged = true
             }
         }
 
@@ -46,6 +47,7 @@ extension MyProductsFormView {
                             if let imageData = imageData {
                                 DispatchQueue.main.async {
                                     self.imagePreviewData = imageData
+                                    self.imageWasChanged = true
                                 }
                             }
                         case let .failure(error):
@@ -72,8 +74,8 @@ extension MyProductsFormView {
         }
 
         func saveProduct(with: AuthService) async {
-            let filename = "custom-products/user_\(with.authState.data!.userId)/product_\(UUID().uuidString)"
-            let newProduct = CreateMyProductDTO(category_id: selectedCategory.id, image: filename, name: product.name ?? "super nazwa")
+            let image = !imageWasChanged ? initialData?.image : (imagePreviewData != nil ? "custom-products/user_\(with.authState.data!.userId)/product_\(UUID().uuidString)" : nil)
+            let newProduct = CreateMyProductDTO(category_id: selectedCategory.id, image: image, name: product.name ?? "super nazwa")
             if let updatingProduct = initialData {
                 let _ = await myProductsRepository.updateProduct(newProduct, productId: updatingProduct.id, with: with, imageData: imagePreviewData)
             } else {

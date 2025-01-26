@@ -64,9 +64,15 @@ class MyProductsRepository {
                 try await client.createFile(bucket: "custom-products", key: filename, withData: imageData)
             }
             let jsonData = try JSONEncoder().encode(product)
-            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/custom-products/\(productId)/", method: "PUT", headers: [
+            var jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+            if product.image == nil {
+                jsonObject["image"] = NSNull()
+            }
+            let updatedJsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+            let data = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/custom-products/\(productId)/", method: "PUT", headers: [
                 "Authorization": "Token \(token)",
-            ], body: jsonData)
+            ], body: updatedJsonData)
+            print(data)
             cachedProducts = []
             return true
         } catch {
