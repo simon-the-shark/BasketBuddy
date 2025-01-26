@@ -17,18 +17,32 @@ struct MyProductsView: View {
                 ForEach(Array(viewModel.groupProductsByCategory.keys), id: \.self) { category in
                     let products = viewModel.groupProductsByCategory[category] ?? []
                     Section(header: Text(category.name)) {
-                        ForEach(products, id: \.self) { product in MyProductTile(product: product, categories: viewModel.categories) }
+                        ForEach(products, id: \.self) { product in  NavigationLink {
+                            MyProductsFormView(product: product, categories: viewModel.categories) {
+                                viewModel.loadProducts(with: authService)
+                            }
+                        } label: {
+                            StorageImage(image: product.image, category: product.category, imageDimensionSize: 50)
+                            Text(product.name)
+                                .font(.subheadline)
+                                .foregroundColor(.primary)
+                        }
+ }
                     }
                 }
-                NavigationLink {
-                    MyProductsFormView(categories: viewModel.categories)
+                NavigationLink{
+                    MyProductsFormView(categories: viewModel.categories) {
+                        viewModel.loadProducts(with: authService)
+                    }
                 } label: {
-                HStack {
-                    Spacer()
-                     Text("Dodaj nowy produkt")
-                    Spacer()
+                    HStack {
+                        Spacer()
+                        Text("Dodaj nowy produkt")
+                        Spacer()
+                    }
                 }
-                }.buttonStyle(PlainButtonStyle()) 
+                .buttonStyle(PlainButtonStyle())
+
             }.navigationBarTitle("My Products")
                 .navigationBarItems(trailing: Button(action: {
                     viewModel.logout(with: authService)
@@ -37,6 +51,7 @@ struct MyProductsView: View {
                     Text("Log Out")
                 })
         }.onAppear {
+            print("onAppear")
             viewModel.loadProducts(with: authService)
         }
     }

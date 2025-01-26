@@ -10,15 +10,21 @@ import PhotosUI
 
 struct MyProductsFormView: View {
     @ObservedObject var viewModel: ViewModel
+    @EnvironmentObject private var authService: AuthService
+    @Environment(\.dismiss) var dismiss
 
-    init(product: MyProduct, categories: [Product.Category]) {
+    
+    init(product: MyProduct, categories: [Product.Category], onDisappear: @escaping () -> Void = {}) {
         self.viewModel = ViewModel(categories: categories, initialData: product)
+        self.onDisappear = onDisappear
     }
     
-    init(categories: [Product.Category]) {
+    init(categories: [Product.Category], onDisappear: @escaping () -> Void = {}) {
         self.viewModel = ViewModel(categories: categories, initialData: nil)
+        self.onDisappear = onDisappear
     }
     
+    private var onDisappear: () -> Void
     
     var body: some View {
         List {
@@ -41,13 +47,12 @@ struct MyProductsFormView: View {
             }
             Section(header: Text("Obraz/Ikona")) {
                 if(viewModel.imagePreviewData == nil){
-                    Image(uiImage: #imageLiteral(resourceName: "\(viewModel.selectedCategory.id)_product_category.png")).resizable().frame(maxWidth: .infinity, maxHeight: 200)
+                    StorageImage(image: viewModel.product.image, category: viewModel.selectedCategory)
                 }
                 if (viewModel.imagePreviewData != nil){
                     if let uiImage = UIImage(data: viewModel.imagePreviewData!) {
                         Image(uiImage: uiImage)
                             .resizable()
-                            .scaledToFill()
                             .frame(maxWidth: .infinity, maxHeight: 200)
                             .padding(0)
                     }
@@ -64,6 +69,10 @@ struct MyProductsFormView: View {
             HStack {
                 Spacer()
                 Button {
+                    Task {
+                     await viewModel.saveProduct(with: authService)
+                        dismiss()
+                    }
                    
                 } label: {
                     Text("Zapisz")
@@ -72,6 +81,9 @@ struct MyProductsFormView: View {
             }
         }
         .navigationBarTitle("Dodaj swój product")
+         .onDisappear {
+            onDisappear()
+        }
     }
 }
 

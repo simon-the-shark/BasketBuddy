@@ -33,4 +33,45 @@ class MyProductsRepository {
             return []
         }
     }
+
+    func addProduct(_ product: CreateMyProductDTO, with: AuthService, imageData: Data?) async -> Bool {
+        guard let token = with.authState.data?.token else {
+            return false
+        }
+        do {
+            if let filename = product.image, let imageData = imageData {
+                let client = try await StorageClient()
+                try await client.createFile(bucket: "custom-products", key: filename, withData: imageData)
+            }
+            let jsonData = try JSONEncoder().encode(product)
+            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/custom-products/", method: "POST", headers: [
+                "Authorization": "Token \(token)",
+            ], body: jsonData)
+            cachedProducts = []
+            return true
+        } catch {
+            print("Error adding product: \(error)")
+            return false
+        }
+    }
+
+    func updateProduct(_ product: CreateMyProductDTO, productId: Int,  with: AuthService, imageData: Data?) async -> Bool {
+        guard let token = with.authState.data?.token else {
+            return false
+        }
+        do {
+            if let filename = product.image, let imageData = imageData {
+                let client = try await StorageClient()
+                try await client.createFile(bucket: "custom-products", key: filename, withData: imageData)
+            }
+            let jsonData = try JSONEncoder().encode(product)
+            let _ = try await NetworkingClient.shared.makeRequest(endpoint: "/api/v1/custom-products/\(productId)/", method: "PUT", headers: [
+                "Authorization": "Token \(token)",
+            ], body: jsonData)
+            cachedProducts = []
+            return true
+        } catch {
+            return false
+        }
+    }
 }
