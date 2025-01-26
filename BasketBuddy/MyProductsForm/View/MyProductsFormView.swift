@@ -28,10 +28,7 @@ struct MyProductsFormView: View {
     var body: some View {
         List {
             Section(header: Text("Dane Produktu")) {
-                HStack {
-                    Text("Nazwa")
-                    TextField("Nazwa", text: $viewModel.productName)
-                }
+                NameInput(viewModel: viewModel)
                 Picker("Kategoria", selection: $viewModel.selectedCategory) {
                     ForEach(viewModel.categories, id: \.self) { category in
                         Text(category.name).tag(category)

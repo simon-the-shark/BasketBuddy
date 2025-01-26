@@ -15,7 +15,7 @@ extension MyProductsFormView {
 
         @Published var product: MyProductFormData
 
-        @Published var productName: String {
+        var productName: String {
             didSet {
                 product = MyProductFormData(category: product.category, image: product.image, name: productName)
             }
