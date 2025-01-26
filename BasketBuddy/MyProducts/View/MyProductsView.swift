@@ -51,7 +51,6 @@ struct MyProductsView: View {
                     Text("Log Out")
                 })
         }.onAppear {
-            print("onAppear")
             viewModel.loadProducts(with: authService)
         }
     }

@@ -29,7 +29,6 @@ extension MyProductsView {
         }
 
         func loadProducts(with: AuthService) {
-            print("loadProducts")
             Task {
                 let products = await repository.getAll(with: with)
                 let categories = await categoriesRepo.getAll(with: with)

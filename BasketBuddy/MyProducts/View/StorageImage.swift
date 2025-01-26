@@ -23,9 +23,13 @@ struct StorageImage: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .frame(maxWidth: imageDimensionSize, maxHeight: imageDimensionSize == nil ? 200 : imageDimensionSize)
+                        .padding(.trailing)
                 }
             } else {
-                ProgressView().onAppear {
+                ProgressView()
+                    .frame(maxWidth: imageDimensionSize, maxHeight: imageDimensionSize == nil ? 200 : imageDimensionSize)
+                    .padding(.trailing)
+                    .onAppear {
                     Task{
                         try await viewModel.loadImage(imagePath: image!)
 
