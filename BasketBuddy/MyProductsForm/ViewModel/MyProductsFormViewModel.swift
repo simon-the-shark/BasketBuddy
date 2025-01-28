@@ -15,6 +15,8 @@ extension MyProductsFormView {
         private var imageWasChanged = false
         @Published var product: MyProductFormData
 
+        @Published var isLoading = false
+
         var productName: String {
             didSet {
                 product = MyProductFormData(category: product.category, image: product.image, name: productName)
@@ -74,12 +76,18 @@ extension MyProductsFormView {
         }
 
         func saveProduct(with: AuthService) async {
+            DispatchQueue.main.async {
+                self.isLoading = true
+            }
             let image = !imageWasChanged ? initialData?.image : (imagePreviewData != nil ? "custom-products/user_\(with.authState.data!.userId)/product_\(UUID().uuidString)" : nil)
             let newProduct = CreateMyProductDTO(category_id: selectedCategory.id, image: image, name: product.name ?? "super nazwa")
             if let updatingProduct = initialData {
                 let _ = await myProductsRepository.updateProduct(newProduct, productId: updatingProduct.id, with: with, imageData: imagePreviewData)
             } else {
                 let _ = await myProductsRepository.addProduct(newProduct, with: with, imageData: imagePreviewData)
+            }
+            DispatchQueue.main.async {
+                self.isLoading = false
             }
         }
     }
